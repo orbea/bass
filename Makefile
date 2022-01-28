@@ -7,7 +7,7 @@ CFLAGS ?= -O2
 CXXFLAGS ?= -O2
 FLAGS := -std=c++17
 
-INCLUDES := -I$(SOURCEDIR)/..
+INCLUDES := -I$(SOURCEDIR)/.
 WARNINGS :=
 LIBS :=  -ldl
 
@@ -45,7 +45,7 @@ BUILD_MAIN = $(call COMPILE_CXX, $(FLAGS) $(WARNINGS) $(INCLUDES))
 
 all: $(NAME)
 
-$(OBJDIR)/%.o: $(SOURCEDIR)/%.cpp $(OBJDIR)/.tag
+$(OBJDIR)/%.o: $(SOURCEDIR)/src/%.cpp $(OBJDIR)/.tag
 	$(call COMPILE_INFO, $(BUILD_MAIN))
 	@$(BUILD_MAIN)
 
