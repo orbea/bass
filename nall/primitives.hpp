@@ -6,14 +6,3 @@ namespace nall {
   template<uint Precision = 64> struct Integer;
   template<uint Precision = 64> struct Real;
 }
-
-#include <nall/primitives/bit-range.hpp>
-#include <nall/primitives/boolean.hpp>
-#include <nall/primitives/natural.hpp>
-#include <nall/primitives/integer.hpp>
-#include <nall/primitives/types.hpp>
-
-namespace nall {
-  template<uint Bits> auto Natural<Bits>::integer() const -> Integer<Bits> { return Integer<Bits>(*this); }
-  template<uint Bits> auto Integer<Bits>::natural() const -> Natural<Bits> { return Natural<Bits>(*this); }
-}
