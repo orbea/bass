@@ -62,7 +62,7 @@ struct hashset {
 
   auto reserve(uint size) -> void {
     //ensure all items will fit into pool (with <= 50% load) and amortize growth
-    size = bit::round(max(size, count << 1));
+    size = bit::round(std::max(size, count << 1));
     T** copy = new T*[size]();
 
     if(pool) {
