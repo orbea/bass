@@ -20,6 +20,10 @@ ifeq ($(UNAME), Linux)
 	LIBS += -Wl,--no-undefined
 endif
 
+ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"),1)
+	WARNINGS += -Wno-shift-count-overflow -Wno-parentheses -Wno-switch
+endif
+
 CXXSRCS := bass.cpp
 
 OBJDIR := objs

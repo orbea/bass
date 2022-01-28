@@ -60,10 +60,6 @@ namespace Math {
   #include <immintrin.h>
 #endif
 
-#if defined(COMPILER_MICROSOFT)
-  #define va_copy(dest, src) ((dest) = (src))
-#endif
-
 #if defined(PLATFORM_WINDOWS)
   #undef  IN
   #undef  OUT
@@ -162,9 +158,6 @@ inline auto spinloop() -> void {
 #if defined(COMPILER_CLANG) || defined(COMPILER_GCC)
   #define noinline   __attribute__((noinline))
   #define alwaysinline  inline __attribute__((always_inline))
-#elif defined(COMPILER_MICROSOFT)
-  #define noinline   __declspec(noinline)
-  #define alwaysinline  inline __forceinline
 #else
   #define noinline
   #define alwaysinline  inline
