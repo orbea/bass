@@ -1,4 +1,3 @@
-bass/out/
-bass/obj/
+objs/
 *.bin
-.*
+bass/bass
