@@ -14,7 +14,6 @@
 #include <nall/array.hpp>
 #include <nall/atoi.hpp>
 #include <nall/bit.hpp>
-#include <nall/serializer.hpp>
 #include <nall/primitives.hpp>
 #include <nall/function.hpp>
 #include <nall/maybe.hpp>
