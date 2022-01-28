@@ -15,10 +15,10 @@
 #include <nall/serializer.hpp>
 #include <nall/primitives.hpp>
 #include <nall/vector.hpp>
-#include <nall/arithmetic.hpp>
 #include <nall/shared-pointer.hpp>
 #include <nall/location.hpp>
 #include <nall/string.hpp>
+#include <nall/arithmetic.hpp>
 #include <nall/inode.hpp>
 #include <nall/hash.hpp>
 #include <nall/file-buffer.hpp>
