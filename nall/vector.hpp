@@ -139,11 +139,9 @@ protected:
 #define vector vector_base
 #include <nall/vector/core.hpp>
 #include <nall/vector/assign.hpp>
-#include <nall/vector/compare.hpp>
 #include <nall/vector/memory.hpp>
 #include <nall/vector/access.hpp>
 #include <nall/vector/modify.hpp>
-#include <nall/vector/iterator.hpp>
 #include <nall/vector/utility.hpp>
 #undef vector
 
