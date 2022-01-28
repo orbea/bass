@@ -6,7 +6,9 @@
 #include "core/core.cpp"
 #include "architecture/table/table.cpp"
 
+#include <nall/arguments.hpp>
 #include <nall/main.hpp>
+
 auto nall::main(Arguments arguments) -> void {
   if(!arguments) {
     print(stderr, "bass v18\n");

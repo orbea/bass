@@ -1,10 +1,5 @@
 #pragma once
 
-#include <nall/location.hpp>
-#include <nall/path.hpp>
-#include <nall/string.hpp>
-#include <nall/vector.hpp>
-
 namespace nall {
 
 struct Arguments {

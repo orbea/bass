@@ -1,9 +1,5 @@
 #pragma once
 
-#include <nall/platform.hpp>
-#include <nall/arguments.hpp>
-#include <nall/string.hpp>
-
 namespace nall {
   auto main(Arguments arguments) -> void;
 
