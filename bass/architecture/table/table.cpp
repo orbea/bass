@@ -1,11 +1,11 @@
-Table::Table(Bass& self, const string& table) : Architecture(self) {
+Table::Table(Bass& self, const nall::string& table) : Architecture(self) {
   bitval = 0;
   bitpos = 0;
   parseTable(table);
 }
 
-auto Table::assemble(const string& statement) -> bool {
-  string s = statement;
+auto Table::assemble(const nall::string& statement) -> bool {
+  nall::string s = statement;
 
   if(s.match("instrument \"*\"")) {
     s.trim("instrument \"", "\"", 1L);
@@ -18,7 +18,7 @@ auto Table::assemble(const string& statement) -> bool {
   for(auto& opcode : table) {
     if(!tokenize(s, opcode.pattern)) continue;
 
-    vector<string> args;
+    nall::vector<nall::string> args;
     tokenize(args, s, opcode.pattern);
     if(args.size() != opcode.number.size()) continue;
 
@@ -64,7 +64,7 @@ auto Table::assemble(const string& statement) -> bool {
 
         case Format::Type::Repeat: {
           uint data = evaluate(args[format.argument]);
-          for(uint n : range(data)) {
+          for(uint n : nall::range(data)) {
             writeBits(format.data, opcode.number[format.argument].bits);
           }
           break;
@@ -117,7 +117,7 @@ auto Table::assemble(const string& statement) -> bool {
   return false;
 }
 
-auto Table::bitLength(string& text) const -> uint {
+auto Table::bitLength(nall::string& text) const -> uint {
   auto binLength = [&](const char* p) -> uint {
     uint length = 0;
     while(*p) {
@@ -152,7 +152,7 @@ auto Table::bitLength(string& text) const -> uint {
 }
 
 auto Table::writeBits(uint64_t data, uint length) -> void {
-  function<uint64_t(unsigned)> setBits = [&](unsigned n) -> uint64_t {
+  nall::function<uint64_t(unsigned)> setBits = [&](unsigned n) -> uint64_t {
     // Create a bit mask with the n least significant bits set
     return (1 << n) - 1;
   };
@@ -167,7 +167,7 @@ auto Table::writeBits(uint64_t data, uint length) -> void {
   }  
 }
 
-auto Table::parseTable(const string& text) -> bool {
+auto Table::parseTable(const nall::string& text) -> bool {
   auto lines = text.split("\n");
   for(auto& line : lines) {
     if(auto position = line.find("//")) line.resize(position());  //remove comments
@@ -200,7 +200,7 @@ auto Table::parseTable(const string& text) -> bool {
 }
 
 // #directive <name> <byte_size>
-auto Table::parseDirective(string& line) -> void {
+auto Table::parseDirective(nall::string& line) -> void {
   auto work = line.strip();
   work.trimLeft("#directive ", 1L);
   
@@ -225,7 +225,7 @@ auto Table::parseDirective(string& line) -> void {
 }
 
 
-auto Table::assembleTableLHS(Opcode& opcode, const string& text) -> void {
+auto Table::assembleTableLHS(Opcode& opcode, const nall::string& text) -> void {
   uint offset = 0;
 
   auto length = [&] {
@@ -257,14 +257,14 @@ auto Table::assembleTableLHS(Opcode& opcode, const string& text) -> void {
   if(opcode.number.size() == opcode.prefix.size()) opcode.pattern.append("*");
 }
 
-auto Table::assembleTableRHS(Opcode& opcode, const string& text) -> void {
+auto Table::assembleTableRHS(Opcode& opcode, const nall::string& text) -> void {
   uint offset = 0;
 
   auto list = text.split(" ");
   for(auto& item : list) {
     if(item[0] == '$' && item.length() == 3) {
       Format format = {Format::Type::Static};
-      format.data = toHex((const char*)item + 1);
+      format.data = nall::toHex((const char*)item + 1);
       format.bits = (item.length() - 1) * 4;
       opcode.format.append(format);
     }
@@ -310,7 +310,7 @@ auto Table::assembleTableRHS(Opcode& opcode, const string& text) -> void {
 
     else if(item[0] == '%') {
       Format format = {Format::Type::Static};
-      format.data = toBinary((const char*)item + 1);
+      format.data = nall::toBinary((const char*)item + 1);
       format.bits = (item.length() - 1);
       opcode.format.append(format);
     }
@@ -350,7 +350,7 @@ auto Table::assembleTableRHS(Opcode& opcode, const string& text) -> void {
     else if(item[0] == '*') {
       Format format = {Format::Type::Repeat};
       format.argument = item[1] - 'a';
-      format.data = toHex((const char*)item + 3);
+      format.data = nall::toHex((const char*)item + 3);
       opcode.format.append(format);
     }
   }

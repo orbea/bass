@@ -8,8 +8,6 @@
 #include <nall/set.hpp>
 #include <nall/terminal.hpp>
 
-using namespace nall;
-
 #undef Architecture
 
 #include "core/core.hpp"

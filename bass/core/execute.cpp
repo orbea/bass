@@ -22,7 +22,7 @@ auto Bass::execute() -> bool {
 
 auto Bass::executeInstruction(Instruction& i) -> bool {
   activeInstruction = &i;
-  string s = i.statement;
+  nall::string s = i.statement;
   evaluateDefines(s);
 
   bool global = s.beginsWith("global ");
@@ -97,7 +97,7 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
     auto size = evaluate(a(0));
     auto p = a(1).split("=", 1L).strip();
     auto parameters = split(p(1));
-    vector<int64_t> values;
+    nall::vector<int64_t> values;
     for(auto& parameter : parameters) values.append(evaluate(parameter));
     if(values.size() > size) error("too many array elements: ", values.size(), " > ", size);
     values.resize(size);  //zero-initialize additional elements
@@ -174,7 +174,7 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
   }
 
   if(s.match("?*(*)")) {
-    auto p = string{s}.trimRight(")", 1L).split("(", 1L).strip();
+    auto p = nall::string{s}.trimRight(")", 1L).split("(", 1L).strip();
     auto name = p(0);
     auto parameters = split(p(1));
     if(parameters) name.append("#", parameters.size());
@@ -183,7 +183,7 @@ auto Bass::executeInstruction(Instruction& i) -> bool {
       if(!frames.right().inlined) scope.append(p(0));
 
       setDefine("#", {}, {"_", macroInvocationCounter++, "_"}, Frame::Level::Inline);
-      for(uint n : range(parameters.size())) {
+      for(uint n : nall::range(parameters.size())) {
         auto p = macro().parameters(n).split(" ", 1L).strip();
         if(p.size() == 1) p.prepend("define");
 

@@ -1,5 +1,5 @@
-auto Bass::evaluate(const string& expression, Evaluation mode) -> int64_t {
-  maybe<string> name;
+auto Bass::evaluate(const nall::string& expression, Evaluation mode) -> int64_t {
+  nall::maybe<nall::string> name;
   if(expression == "--") name = {"lastLabel#", lastLabelCounter - 2};
   if(expression == "-" ) name = {"lastLabel#", lastLabelCounter - 1};
   if(expression == "+" ) name = {"nextLabel#", nextLabelCounter + 0};
@@ -10,9 +10,9 @@ auto Bass::evaluate(const string& expression, Evaluation mode) -> int64_t {
     error("relative label not declared");
   }
 
-  Eval::Node* node = nullptr;
+  nall::Eval::Node* node = nullptr;
   try {
-    node = Eval::parse(expression);
+    node = nall::Eval::parse(expression);
   } catch(const char* reason) {
     error("malformed expression: ", expression, " [", reason, "]");
   } catch(...) {
@@ -21,38 +21,38 @@ auto Bass::evaluate(const string& expression, Evaluation mode) -> int64_t {
   return evaluate(node, mode);
 }
 
-auto Bass::evaluate(Eval::Node* node, Evaluation mode) -> int64_t {
+auto Bass::evaluate(nall::Eval::Node* node, Evaluation mode) -> int64_t {
   #define p(n) evaluate(node->link[n], mode)
 
   switch(node->type) {
-  case Eval::Node::Type::Null: return 0;  //empty expressions
-  case Eval::Node::Type::Function: return evaluateExpression(node, mode);
-  case Eval::Node::Type::Literal: return evaluateLiteral(node, mode);
-  case Eval::Node::Type::Subscript: return evaluateSubscript(node, mode);
-  case Eval::Node::Type::LogicalNot: return !p(0);
-  case Eval::Node::Type::BitwiseNot: return ~p(0);
-  case Eval::Node::Type::Positive: return +p(0);
-  case Eval::Node::Type::Negative: return -p(0);
-  case Eval::Node::Type::Multiply: return p(0) * p(1);
-  case Eval::Node::Type::Divide: return p(0) / p(1);
-  case Eval::Node::Type::Modulo: return p(0) % p(1);
-  case Eval::Node::Type::Add: return p(0) + p(1);
-  case Eval::Node::Type::Subtract: return p(0) - p(1);
-  case Eval::Node::Type::ShiftLeft: return p(0) << p(1);
-  case Eval::Node::Type::ShiftRight: return p(0) >> p(1);
-  case Eval::Node::Type::BitwiseAnd: return p(0) & p(1);
-  case Eval::Node::Type::BitwiseOr: return p(0) | p(1);
-  case Eval::Node::Type::BitwiseXor: return p(0) ^ p(1);
-  case Eval::Node::Type::Equal: return p(0) == p(1);
-  case Eval::Node::Type::NotEqual: return p(0) != p(1);
-  case Eval::Node::Type::LessThanEqual: return p(0) <= p(1);
-  case Eval::Node::Type::GreaterThanEqual: return p(0) >= p(1);
-  case Eval::Node::Type::LessThan: return p(0) < p(1);
-  case Eval::Node::Type::GreaterThan: return p(0) > p(1);
-  case Eval::Node::Type::LogicalAnd: return p(0) ? p(1) : 0;
-  case Eval::Node::Type::LogicalOr: return !p(0) ? p(1) : 1;
-  case Eval::Node::Type::Condition: return p(0) ? p(1) : p(2);
-  case Eval::Node::Type::Assign: return evaluateAssign(node, mode);
+  case nall::Eval::Node::Type::Null: return 0;  //empty expressions
+  case nall::Eval::Node::Type::Function: return evaluateExpression(node, mode);
+  case nall::Eval::Node::Type::Literal: return evaluateLiteral(node, mode);
+  case nall::Eval::Node::Type::Subscript: return evaluateSubscript(node, mode);
+  case nall::Eval::Node::Type::LogicalNot: return !p(0);
+  case nall::Eval::Node::Type::BitwiseNot: return ~p(0);
+  case nall::Eval::Node::Type::Positive: return +p(0);
+  case nall::Eval::Node::Type::Negative: return -p(0);
+  case nall::Eval::Node::Type::Multiply: return p(0) * p(1);
+  case nall::Eval::Node::Type::Divide: return p(0) / p(1);
+  case nall::Eval::Node::Type::Modulo: return p(0) % p(1);
+  case nall::Eval::Node::Type::Add: return p(0) + p(1);
+  case nall::Eval::Node::Type::Subtract: return p(0) - p(1);
+  case nall::Eval::Node::Type::ShiftLeft: return p(0) << p(1);
+  case nall::Eval::Node::Type::ShiftRight: return p(0) >> p(1);
+  case nall::Eval::Node::Type::BitwiseAnd: return p(0) & p(1);
+  case nall::Eval::Node::Type::BitwiseOr: return p(0) | p(1);
+  case nall::Eval::Node::Type::BitwiseXor: return p(0) ^ p(1);
+  case nall::Eval::Node::Type::Equal: return p(0) == p(1);
+  case nall::Eval::Node::Type::NotEqual: return p(0) != p(1);
+  case nall::Eval::Node::Type::LessThanEqual: return p(0) <= p(1);
+  case nall::Eval::Node::Type::GreaterThanEqual: return p(0) >= p(1);
+  case nall::Eval::Node::Type::LessThan: return p(0) < p(1);
+  case nall::Eval::Node::Type::GreaterThan: return p(0) > p(1);
+  case nall::Eval::Node::Type::LogicalAnd: return p(0) ? p(1) : 0;
+  case nall::Eval::Node::Type::LogicalOr: return !p(0) ? p(1) : 1;
+  case nall::Eval::Node::Type::Condition: return p(0) ? p(1) : p(2);
+  case nall::Eval::Node::Type::Assign: return evaluateAssign(node, mode);
   }
 
   #undef p
@@ -61,26 +61,26 @@ auto Bass::evaluate(Eval::Node* node, Evaluation mode) -> int64_t {
 }
 
 //calculates the number of parameters to a function without evaluating its arguments yet
-auto Bass::quantifyParameters(Eval::Node* node) -> int64_t {
-  if(node->type == Eval::Node::Type::Null) return 0;
-  if(node->type == Eval::Node::Type::Separator) return node->link.size();
+auto Bass::quantifyParameters(nall::Eval::Node* node) -> int64_t {
+  if(node->type == nall::Eval::Node::Type::Null) return 0;
+  if(node->type == nall::Eval::Node::Type::Separator) return node->link.size();
   return 1;  //any other type here signifies one argument
 }
 
-auto Bass::evaluateParameters(Eval::Node* node, Evaluation mode) -> vector<int64_t> {
-  vector<int64_t> result;
-  if(node->type == Eval::Node::Type::Null) return result;
-  if(node->type != Eval::Node::Type::Separator) { result.append(evaluate(node, mode)); return result; }
+auto Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) -> nall::vector<int64_t> {
+  nall::vector<int64_t> result;
+  if(node->type == nall::Eval::Node::Type::Null) return result;
+  if(node->type != nall::Eval::Node::Type::Separator) { result.append(evaluate(node, mode)); return result; }
   for(auto& link : node->link) result.append(evaluate(link, mode));
   return result;
 }
 
-auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
-  string name = node->link[0]->literal;
+auto Bass::evaluateExpression(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+  nall::string name = node->link[0]->literal;
   if(auto parameters = quantifyParameters(node->link[1])) name.append("#", parameters);
 
   if(name == "array.size#1") {
-    string s = evaluateString(node->link[1]);
+    nall::string s = evaluateString(node->link[1]);
     if(auto array = findArray(s)) {
       return array->values.size();
     }
@@ -88,7 +88,7 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
     return 0;
   }
   if(name == "array.sort#1") {
-    string s = evaluateString(node->link[1]);
+    nall::string s = evaluateString(node->link[1]);
     if(auto array = findArray(s)) {
       array->values.sort();
       return 0;
@@ -102,16 +102,16 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
     return 0;
   }
   if(name == "file.size#1") {
-    string filename = evaluateString(node->link[1]).trim("\"", "\"", 1L);
-    string location = {filepath(), filename};
-    if(file::exists(location)) return file::size(location);
+    nall::string filename = evaluateString(node->link[1]).trim("\"", "\"", 1L);
+    nall::string location = {filepath(), filename};
+    if(nall::file::exists(location)) return nall::file::size(location);
     error("file not found: ", filename);
     return 0;
   }
   if(name == "file.exists#1") {
-    string filename = evaluateString(node->link[1]).trim("\"", "\"", 1L);
-    string location = {filepath(), filename};
-    return file::exists(location);
+    nall::string filename = evaluateString(node->link[1]).trim("\"", "\"", 1L);
+    nall::string location = {filepath(), filename};
+    return nall::file::exists(location);
   }
   if(name == "read#1") {
     if(!targetFile) error("no target file open for reading");
@@ -129,7 +129,7 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
   if(auto expression = findExpression(name)) {
     auto parameters = evaluateParameters(node->link[1], mode);
     if(parameters) frames.append({0, true});
-    for(auto n : range(parameters.size())) {
+    for(auto n : nall::range(parameters.size())) {
       setVariable(expression().parameters(n), evaluate(parameters(n)), Frame::Level::Inline);
     }
     auto result = evaluate(expression().value);
@@ -142,21 +142,21 @@ auto Bass::evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t {
 }
 
 //bass' evaluate() only returns int64_t types.
-//this function is used to parse string arguments while performing trivial string concatenation
+//this function is used to parse nall::string arguments while performing trivial nall::string concatenation
 //eg "foo" ~ "bar" => "foobar"
-auto Bass::evaluateString(Eval::Node* node) -> string {
-  if(node->type == Eval::Node::Type::Literal) return node->literal;
-  if(node->type == Eval::Node::Type::Concatenate) {
-    string lhs = evaluateString(node->link[0]).trim("\"", "\"", 1L);
-    string rhs = evaluateString(node->link[1]).trim("\"", "\"", 1L);
+auto Bass::evaluateString(nall::Eval::Node* node) -> nall::string {
+  if(node->type == nall::Eval::Node::Type::Literal) return node->literal;
+  if(node->type == nall::Eval::Node::Type::Concatenate) {
+    nall::string lhs = evaluateString(node->link[0]).trim("\"", "\"", 1L);
+    nall::string rhs = evaluateString(node->link[1]).trim("\"", "\"", 1L);
     return {"\"", lhs, rhs, "\""};
   };
-  error("unrecognized string expression");
+  error("unrecognized nall::string expression");
   return {};
 }
 
-auto Bass::evaluateLiteral(Eval::Node* node, Evaluation mode) -> int64_t {
-  string& s = node->literal;
+auto Bass::evaluateLiteral(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+  nall::string& s = node->literal;
 
   if(s[0] == '0' && s[1] == 'b') return toBinary(s);
   if(s[0] == '0' && s[1] == 'o') return toOctal(s);
@@ -174,8 +174,8 @@ auto Bass::evaluateLiteral(Eval::Node* node, Evaluation mode) -> int64_t {
   return 0;
 }
 
-auto Bass::evaluateSubscript(Eval::Node* node, Evaluation mode) -> int64_t {
-  string& s = node->link[0]->literal;
+auto Bass::evaluateSubscript(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+  nall::string& s = node->link[0]->literal;
 
   if(auto array = findArray(s)) {
     auto index = evaluate(node->link[1], mode);
@@ -189,8 +189,8 @@ auto Bass::evaluateSubscript(Eval::Node* node, Evaluation mode) -> int64_t {
   return 0;
 }
 
-auto Bass::evaluateAssign(Eval::Node* node, Evaluation mode) -> int64_t {
-  string& s = node->link[0]->literal;
+auto Bass::evaluateAssign(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+  nall::string& s = node->link[0]->literal;
 
   if(auto variable = findVariable(s)) {
     variable().value = evaluate(node->link[1], mode);

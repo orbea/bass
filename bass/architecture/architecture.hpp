@@ -5,7 +5,7 @@ struct Architecture {
   virtual ~Architecture() {
   }
 
-  virtual auto assemble(const string& statement) -> bool {
+  virtual auto assemble(const nall::string& statement) -> bool {
     return false;
   }
 
@@ -27,11 +27,11 @@ struct Architecture {
     return self.directives;
   }
 
-  auto readArchitecture(const string& s) -> string {
+  auto readArchitecture(const nall::string& s) -> nall::string {
     return self.readArchitecture(s);
   }
 
-  auto evaluate(const string& expression, Bass::Evaluation mode = Bass::Evaluation::Default) -> int64_t {
+  auto evaluate(const nall::string& expression, Bass::Evaluation mode = Bass::Evaluation::Default) -> int64_t {
     return self.evaluate(expression, mode);
   }
 
@@ -40,15 +40,15 @@ struct Architecture {
   }
 
   template<typename... P> auto notice(P&&... p) -> void {
-    return self.notice(forward<P>(p)...);
+    return self.notice(nall::forward<P>(p)...);
   }
 
   template<typename... P> auto warning(P&&... p) -> void {
-    return self.warning(forward<P>(p)...);
+    return self.warning(nall::forward<P>(p)...);
   }
 
   template<typename... P> auto error(P&&... p) -> void {
-    return self.error(forward<P>(p)...);
+    return self.error(nall::forward<P>(p)...);
   }
 
   Bass& self;

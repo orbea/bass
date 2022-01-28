@@ -1,10 +1,10 @@
 struct Architecture;
 
 struct Bass {
-  auto target(const string& filename, bool create) -> bool;
-  auto source(const string& filename) -> bool;
-  auto define(const string& name, const string& value) -> void;
-  auto constant(const string& name, const string& value) -> void;
+  auto target(const nall::string& filename, bool create) -> bool;
+  auto source(const nall::string& filename) -> bool;
+  auto define(const nall::string& name, const nall::string& value) -> void;
+  auto constant(const nall::string& name, const nall::string& value) -> void;
   auto assemble(bool strict = false) -> bool;
 
   enum class Phase : uint { Analyze, Query, Write };
@@ -12,7 +12,7 @@ struct Bass {
   enum class Evaluation : uint { Default = 0, Strict = 1 };  //strict mode disallows forward-declaration of constants
 
   struct Instruction {
-    string statement;
+    nall::string statement;
     uint ip;
 
     uint fileNumber;
@@ -22,45 +22,45 @@ struct Bass {
 
   struct Macro {
     Macro() {}
-    Macro(const string& name) : name(name) {}
-    Macro(const string& name, const vector<string>& parameters, uint ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
+    Macro(const nall::string& name) : name(name) {}
+    Macro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Macro& source) const -> bool { return name == source.name; }
     auto operator< (const Macro& source) const -> bool { return name <  source.name; }
 
-    string name;
-    vector<string> parameters;
+    nall::string name;
+    nall::vector<nall::string> parameters;
     uint ip;
     bool inlined;
   };
 
   struct Define {
     Define() {}
-    Define(const string& name) : name(name) {}
-    Define(const string& name, const vector<string>& parameters, const string& value) : name(name), parameters(parameters), value(value) {}
+    Define(const nall::string& name) : name(name) {}
+    Define(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value) : name(name), parameters(parameters), value(value) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Define& source) const -> bool { return name == source.name; }
     auto operator< (const Define& source) const -> bool { return name <  source.name; }
 
-    string name;
-    vector<string> parameters;
-    string value;
+    nall::string name;
+    nall::vector<nall::string> parameters;
+    nall::string value;
   };
 
   using Expression = Define;  //Define and Expression structures are identical
 
   struct Variable {
     Variable() {}
-    Variable(const string& name) : name(name) {}
-    Variable(const string& name, int64_t value) : name(name), value(value) {}
+    Variable(const nall::string& name) : name(name) {}
+    Variable(const nall::string& name, int64_t value) : name(name), value(value) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Variable& source) const -> bool { return name == source.name; }
     auto operator< (const Variable& source) const -> bool { return name <  source.name; }
 
-    string name;
+    nall::string name;
     int64_t value;
   };
 
@@ -68,15 +68,15 @@ struct Bass {
 
   struct Array {
     Array() {}
-    Array(const string& name) : name(name) {}
-    Array(const string& name, vector<int64_t> values) : name(name), values(values) {}
+    Array(const nall::string& name) : name(name) {}
+    Array(const nall::string& name, nall::vector<int64_t> values) : name(name), values(values) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Array& source) const -> bool { return name == source.name; }
     auto operator< (const Array& source) const -> bool { return name <  source.name; }
 
-    string name;
-    vector<int64_t> values;
+    nall::string name;
+    nall::vector<int64_t> values;
   };
 
   struct Frame {
@@ -90,38 +90,38 @@ struct Bass {
     uint ip;
     bool inlined;
 
-    hashset<Macro> macros;
-    hashset<Define> defines;
-    hashset<Expression> expressions;
-    hashset<Variable> variables;
-    hashset<Array> arrays;
+    nall::hashset<Macro> macros;
+    nall::hashset<Define> defines;
+    nall::hashset<Expression> expressions;
+    nall::hashset<Variable> variables;
+    nall::hashset<Array> arrays;
   };
 
   struct Block {
     uint ip;
-    string type;
+    nall::string type;
   };
 
   struct Tracker {
     bool enable = false;
-    set<int64_t> addresses;
+    nall::set<int64_t> addresses;
   };
 
   struct Directives {
   private:
     struct _EmitBytesOp {
-      string token;
+      nall::string token;
       uint dataLength;
     };
 
   public:
-    vector<_EmitBytesOp> EmitBytes;
+    nall::vector<_EmitBytesOp> EmitBytes;
 
     Directives()
     : EmitBytes ({ {"db ", 1}, {"dw ", 2}, {"dl ", 3}, {"dd ", 4}, {"dq ", 8}})
     {}
     
-    void add(string token, uint dataLength) {
+    void add(nall::string token, uint dataLength) {
       EmitBytes.append( {token, dataLength} );
     }
   };
@@ -144,15 +144,15 @@ protected:
   template<typename... P> auto error(P&&... p) -> void;
 
   //evaluate.cpp
-  auto evaluate(const string& expression, Evaluation mode = Evaluation::Default) -> int64_t;
-  auto evaluate(Eval::Node* node, Evaluation mode) -> int64_t;
-  auto quantifyParameters(Eval::Node* node) -> int64_t;
-  auto evaluateParameters(Eval::Node* node, Evaluation mode) -> vector<int64_t>;
-  auto evaluateExpression(Eval::Node* node, Evaluation mode) -> int64_t;
-  auto evaluateString(Eval::Node* node) -> string;
-  auto evaluateLiteral(Eval::Node* node, Evaluation mode) -> int64_t;
-  auto evaluateSubscript(Eval::Node* node, Evaluation mode) -> int64_t;
-  auto evaluateAssign(Eval::Node* node, Evaluation mode) -> int64_t;
+  auto evaluate(const nall::string& expression, Evaluation mode = Evaluation::Default) -> int64_t;
+  auto evaluate(nall::Eval::Node* node, Evaluation mode) -> int64_t;
+  auto quantifyParameters(nall::Eval::Node* node) -> int64_t;
+  auto evaluateParameters(nall::Eval::Node* node, Evaluation mode) -> nall::vector<int64_t>;
+  auto evaluateExpression(nall::Eval::Node* node, Evaluation mode) -> int64_t;
+  auto evaluateString(nall::Eval::Node* node) -> nall::string;
+  auto evaluateLiteral(nall::Eval::Node* node, Evaluation mode) -> int64_t;
+  auto evaluateSubscript(nall::Eval::Node* node, Evaluation mode) -> int64_t;
+  auto evaluateAssign(nall::Eval::Node* node, Evaluation mode) -> int64_t;
 
   //analyze.cpp
   auto analyze() -> bool;
@@ -164,49 +164,49 @@ protected:
 
   //assemble.cpp
   auto initialize() -> void;
-  auto assemble(const string& statement) -> bool;
-  auto assembleString(const string& parameters) -> string;
+  auto assemble(const nall::string& statement) -> bool;
+  auto assembleString(const nall::string& parameters) -> nall::string;
 
   //utility.cpp
-  auto setMacro(const string& name, const vector<string>& parameters, uint ip, bool inlined, Frame::Level level) -> void;
-  auto findMacro(const string& name) -> maybe<Macro&>;
+  auto setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined, Frame::Level level) -> void;
+  auto findMacro(const nall::string& name) -> nall::maybe<Macro&>;
 
-  auto setDefine(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void;
-  auto findDefine(const string& name) -> maybe<Define&>;
+  auto setDefine(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) -> void;
+  auto findDefine(const nall::string& name) -> nall::maybe<Define&>;
 
-  auto setExpression(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void;
-  auto findExpression(const string& name) -> maybe<Expression&>;
+  auto setExpression(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) -> void;
+  auto findExpression(const nall::string& name) -> nall::maybe<Expression&>;
 
-  auto setVariable(const string& name, int64_t value, Frame::Level level) -> void;
-  auto findVariable(const string& name) -> maybe<Variable&>;
+  auto setVariable(const nall::string& name, int64_t value, Frame::Level level) -> void;
+  auto findVariable(const nall::string& name) -> nall::maybe<Variable&>;
 
-  auto setConstant(const string& name, int64_t value) -> void;
-  auto findConstant(const string& name) -> maybe<Constant&>;
+  auto setConstant(const nall::string& name, int64_t value) -> void;
+  auto findConstant(const nall::string& name) -> nall::maybe<Constant&>;
 
-  auto setArray(const string& name, const vector<int64_t>& values, Frame::Level level) -> void;
-  auto findArray(const string& name) -> maybe<Array&>;
+  auto setArray(const nall::string& name, const nall::vector<int64_t>& values, Frame::Level level) -> void;
+  auto findArray(const nall::string& name) -> nall::maybe<Array&>;
 
-  auto evaluateDefines(string& statement) -> void;
+  auto evaluateDefines(nall::string& statement) -> void;
 
-  auto readArchitecture(const string& s) -> string;
+  auto readArchitecture(const nall::string& s) -> nall::string;
 
-  auto filepath() -> string;
-  auto split(const string& s) -> vector<string>;
-  auto strip(string& s) -> void;
-  auto validate(const string& s) -> bool;
-  auto text(string s) -> string;
-  auto character(const string& s) -> int64_t;
+  auto filepath() -> nall::string;
+  auto split(const nall::string& s) -> nall::vector<nall::string>;
+  auto strip(nall::string& s) -> void;
+  auto validate(const nall::string& s) -> bool;
+  auto text(nall::string s) -> nall::string;
+  auto character(const nall::string& s) -> int64_t;
 
   //internal state
   Instruction* activeInstruction = nullptr;  //used by notice, warning, error
-  vector<Instruction> program;    //parsed source code statements
-  vector<Block> blocks;           //track the start and end of blocks
-  set<Define> defines;            //defines specified on the terminal
-  hashset<Constant> constants;    //constants support forward-declaration
-  vector<Frame> frames;           //macros, defines and variables do not
-  vector<bool> conditionals;      //track conditional matching
-  vector<string> queue;            //track enqueue, dequeue directives
-  vector<string> scope;            //track scope recursion
+  nall::vector<Instruction> program;    //parsed source code statements
+  nall::vector<Block> blocks;           //track the start and end of blocks
+  nall::set<Define> defines;            //defines specified on the terminal
+  nall::hashset<Constant> constants;    //constants support forward-declaration
+  nall::vector<Frame> frames;           //macros, defines and variables do not
+  nall::vector<bool> conditionals;      //track conditional matching
+  nall::vector<nall::string> queue;            //track enqueue, dequeue directives
+  nall::vector<nall::string> scope;            //track scope recursion
   int64_t stringTable[256];       //overrides for d[bwldq] text strings
   Phase phase;                    //phase of assembly
   Endian endian = Endian::LSB;    //used for multi-byte writes (d[bwldq], etc)
@@ -221,9 +221,9 @@ protected:
   bool strict = false;            //upgrade warnings to errors when true
   Directives directives;          //active directives
 
-  file_buffer targetFile;
-  vector<string> sourceFilenames;
+  nall::file_buffer targetFile;
+  nall::vector<nall::string> sourceFilenames;
 
-  shared_pointer<Architecture> architecture;
+  nall::shared_pointer<Architecture> architecture;
   friend class Architecture;
 };

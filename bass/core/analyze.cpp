@@ -11,7 +11,7 @@ auto Bass::analyze() -> bool {
 }
 
 auto Bass::analyzeInstruction(Instruction& i) -> bool {
-  string s = i.statement;
+  nall::string s = i.statement;
 
   if(s.match("}") && !blocks) error("} without matching {\n", i.lineNumber, ": ", i.statement);
 

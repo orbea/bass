@@ -1,7 +1,7 @@
 auto Bass::initialize() -> void {
   queue.reset();
   scope.reset();
-  for(uint n : range(256)) stringTable[n] = n;
+  for(uint n : nall::range(256)) stringTable[n] = n;
   endian = Endian::LSB;
   origin = 0;
   base = 0;
@@ -9,8 +9,8 @@ auto Bass::initialize() -> void {
   nextLabelCounter = 1;
 }
 
-auto Bass::assemble(const string& statement) -> bool {
-  string s = statement;
+auto Bass::assemble(const nall::string& statement) -> bool {
+  nall::string s = statement;
 
   if(s.match("block {")) return true;
   if(s.match("} endblock")) return true;
@@ -79,7 +79,7 @@ auto Bass::assemble(const string& statement) -> bool {
   if(s.match("output ?*")) {
     auto p = split(s.trimLeft("output ", 1L));
     if(!p(0).match("\"*\"")) error("missing filename");
-    string filename = {filepath(), text(p.take(0))};
+    nall::string filename = {filepath(), text(p.take(0))};
     bool create = (p.size() && p(0) == "create");
     target(filename, create);
     return true;
@@ -166,12 +166,12 @@ auto Bass::assemble(const string& statement) -> bool {
       auto source = evaluate(p(0));
       auto target = evaluate(p(1));
       auto length = evaluate(p(2));
-      vector<u8> memory;
+      nall::vector<u8> memory;
       memory.resize(length);
       targetFile.seek(source);
       targetFile.read(memory);
       targetFile.seek(target);
-      for(uint offset : range(length)) write(memory[offset]);
+      for(uint offset : nall::range(length)) write(memory[offset]);
       targetFile.seek(origin);
       return true;
     }
@@ -180,11 +180,11 @@ auto Bass::assemble(const string& statement) -> bool {
   //insert [name, ] filename [, offset] [, length]
   if(s.match("insert ?*")) {
     auto p = split(s.trimLeft("insert ", 1L));
-    string name;
+    nall::string name;
     if(!p(0).match("\"*\"")) name = p.take(0);
     if(!p(0).match("\"*\"")) error("missing filename");
-    string filename = {filepath(), text(p.take(0))};
-    auto fp = file::open(filename, file::mode::read);
+    nall::string filename = {filepath(), text(p.take(0))};
+    auto fp = nall::file::open(filename, nall::file::mode::read);
     if(!fp) error("file not found: ", filename);
     uint offset = p.size() ? evaluate(p.take(0)) : 0;
     if(offset > fp.size()) offset = fp.size();
@@ -203,12 +203,12 @@ auto Bass::assemble(const string& statement) -> bool {
   if(s.match("delete ?*")) {
     auto p = split(s.trimLeft("delete ", 1L));
     if(!p(0).match("\"*\"")) error("missing filename");
-    string filename = {filepath(), text(p.take(0))};
-    if(!file::exists(filename)) {
+    nall::string filename = {filepath(), text(p.take(0))};
+    if(!nall::file::exists(filename)) {
       warning("file not found: ", filename);
       return true;
     }
-    if(!file::remove(filename)) {
+    if(!nall::file::remove(filename)) {
       warning("unable to delete file: ", filename);
       return true;
     }
@@ -230,7 +230,7 @@ auto Bass::assemble(const string& statement) -> bool {
     uint8_t index = evaluate(p(0));
     int64_t value = evaluate(p(1, "0"));
     int64_t length = evaluate(p(2, "1"));
-    for(int n : range(length)) {
+    for(int n : nall::range(length)) {
       stringTable[index + n] = value + n;
     }
     return true;
@@ -328,18 +328,18 @@ auto Bass::assemble(const string& statement) -> bool {
   return result;
 }
 
-auto Bass::assembleString(const string& parameters) -> string {
-  string result;
+auto Bass::assembleString(const nall::string& parameters) -> nall::string {
+  nall::string result;
   auto p = split(parameters);
   for(auto& t : p) {
     if(t.match("\"*\"")) {
       result.append(text(t));
     } else if(t.match("binary:?*")) {
       t.trimLeft("binary:", 1L);
-      result.append(binary(evaluate(t)));
+      result.append(nall::binary(evaluate(t)));
     } else if(t.match("hex:?*")) {
       t.trimLeft("hex:", 1L);
-      result.append(hex(evaluate(t)));
+      result.append(nall::hex(evaluate(t)));
     } else if(t.match("char:?*")) {
       t.trimLeft("char:", 1L);
       result.append((char)evaluate(t));

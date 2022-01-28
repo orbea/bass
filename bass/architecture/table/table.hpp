@@ -1,10 +1,10 @@
 struct Table : Architecture {
-  Table(Bass& self, const string& table);
-  auto assemble(const string& statement) -> bool override;
+  Table(Bass& self, const nall::string& table);
+  auto assemble(const nall::string& statement) -> bool override;
 
 private:
   struct Prefix {
-    string text;
+    nall::string text;
     uint size;
   };
 
@@ -30,20 +30,20 @@ private:
   };
 
   struct Opcode {
-    vector<Prefix> prefix;
-    vector<Number> number;
-    vector<Format> format;
-    string pattern;
+    nall::vector<Prefix> prefix;
+    nall::vector<Number> number;
+    nall::vector<Format> format;
+    nall::string pattern;
   };
 
-  auto bitLength(string& text) const -> uint;
+  auto bitLength(nall::string& text) const -> uint;
   auto writeBits(uint64_t data, uint bits) -> void;
-  auto parseTable(const string& text) -> bool;
-  auto parseDirective(string& line) -> void;
-  auto assembleTableLHS(Opcode& opcode, const string& text) -> void;
-  auto assembleTableRHS(Opcode& opcode, const string& text) -> void;
+  auto parseTable(const nall::string& text) -> bool;
+  auto parseDirective(nall::string& line) -> void;
+  auto assembleTableLHS(Opcode& opcode, const nall::string& text) -> void;
+  auto assembleTableRHS(Opcode& opcode, const nall::string& text) -> void;
   auto swapEndian(uint64_t data, unsigned bits) -> uint64_t;
 
-  vector<Opcode> table;
+  nall::vector<Opcode> table;
   uint64_t bitval, bitpos;
 };
