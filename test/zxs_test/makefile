@@ -1,4 +1,4 @@
-bass	:= ../../bass/out/bass
+bass	:= ../../bass
 
 SFILES	:= $(wildcard *.asm)
 BINFILES:= $(SFILES:.asm=.bin)

@@ -1,4 +1,4 @@
-bass	:= ../../bass/out/bass
+bass	:= ../../bass
 gsudis	:= gsudis
 
 TARGET	:= $(shell basename $(CURDIR))

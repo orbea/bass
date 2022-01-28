@@ -1,4 +1,4 @@
-bass	:= ../../bass/out/bass
+bass	:= ../../bass
 
 TARGET	:= $(shell basename $(CURDIR))
 
