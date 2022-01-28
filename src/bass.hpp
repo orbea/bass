@@ -7,6 +7,8 @@
 #include <nall/traits.hpp>
 #include <nall/algorithm.hpp>
 #include <nall/memory.hpp>
+#include <nall/iterator.hpp>
+#include <nall/range.hpp>
 #include <nall/array-view.hpp>
 #include <nall/array-span.hpp>
 #include <nall/array.hpp>
@@ -19,8 +21,8 @@
 #include <nall/merge-sort.hpp>
 #include <nall/vector.hpp>
 #include <nall/shared-pointer.hpp>
-#include <nall/location.hpp>
 #include <nall/string.hpp>
+#include <nall/location.hpp>
 #include <nall/arithmetic.hpp>
 #include <nall/inode.hpp>
 #include <nall/hash.hpp>

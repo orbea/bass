@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nall/traits.hpp>
-
 namespace nall {
 
 template<typename T> struct function;
