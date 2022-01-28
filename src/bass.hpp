@@ -14,6 +14,9 @@
 #include <nall/bit.hpp>
 #include <nall/serializer.hpp>
 #include <nall/primitives.hpp>
+#include <nall/function.hpp>
+#include <nall/maybe.hpp>
+#include <nall/merge-sort.hpp>
 #include <nall/vector.hpp>
 #include <nall/shared-pointer.hpp>
 #include <nall/location.hpp>
