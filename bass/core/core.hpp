@@ -23,14 +23,14 @@ struct Bass {
   struct Macro {
     Macro() {}
     Macro(const string& name) : name(name) {}
-    Macro(const string& name, const string_vector& parameters, uint ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
+    Macro(const string& name, const vector<string>& parameters, uint ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Macro& source) const -> bool { return name == source.name; }
     auto operator< (const Macro& source) const -> bool { return name <  source.name; }
 
     string name;
-    string_vector parameters;
+    vector<string> parameters;
     uint ip;
     bool inlined;
   };
@@ -38,14 +38,14 @@ struct Bass {
   struct Define {
     Define() {}
     Define(const string& name) : name(name) {}
-    Define(const string& name, const string_vector& parameters, const string& value) : name(name), parameters(parameters), value(value) {}
+    Define(const string& name, const vector<string>& parameters, const string& value) : name(name), parameters(parameters), value(value) {}
 
     auto hash() const -> uint { return name.hash(); }
     auto operator==(const Define& source) const -> bool { return name == source.name; }
     auto operator< (const Define& source) const -> bool { return name <  source.name; }
 
     string name;
-    string_vector parameters;
+    vector<string> parameters;
     string value;
   };
 
@@ -168,13 +168,13 @@ protected:
   auto assembleString(const string& parameters) -> string;
 
   //utility.cpp
-  auto setMacro(const string& name, const string_vector& parameters, uint ip, bool inlined, Frame::Level level) -> void;
+  auto setMacro(const string& name, const vector<string>& parameters, uint ip, bool inlined, Frame::Level level) -> void;
   auto findMacro(const string& name) -> maybe<Macro&>;
 
-  auto setDefine(const string& name, const string_vector& parameters, const string& value, Frame::Level level) -> void;
+  auto setDefine(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void;
   auto findDefine(const string& name) -> maybe<Define&>;
 
-  auto setExpression(const string& name, const string_vector& parameters, const string& value, Frame::Level level) -> void;
+  auto setExpression(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void;
   auto findExpression(const string& name) -> maybe<Expression&>;
 
   auto setVariable(const string& name, int64_t value, Frame::Level level) -> void;
@@ -191,7 +191,7 @@ protected:
   auto readArchitecture(const string& s) -> string;
 
   auto filepath() -> string;
-  auto split(const string& s) -> string_vector;
+  auto split(const string& s) -> vector<string>;
   auto strip(string& s) -> void;
   auto validate(const string& s) -> bool;
   auto text(string s) -> string;
@@ -205,8 +205,8 @@ protected:
   hashset<Constant> constants;    //constants support forward-declaration
   vector<Frame> frames;           //macros, defines and variables do not
   vector<bool> conditionals;      //track conditional matching
-  string_vector queue;            //track enqueue, dequeue directives
-  string_vector scope;            //track scope recursion
+  vector<string> queue;            //track enqueue, dequeue directives
+  vector<string> scope;            //track scope recursion
   int64_t stringTable[256];       //overrides for d[bwldq] text strings
   Phase phase;                    //phase of assembly
   Endian endian = Endian::LSB;    //used for multi-byte writes (d[bwldq], etc)
@@ -222,7 +222,7 @@ protected:
   Directives directives;          //active directives
 
   file_buffer targetFile;
-  string_vector sourceFilenames;
+  vector<string> sourceFilenames;
 
   shared_pointer<Architecture> architecture;
   friend class Architecture;

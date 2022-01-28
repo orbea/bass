@@ -9,7 +9,6 @@
 #include <nall/terminal.hpp>
 
 using namespace nall;
-using string_vector = vector<string>;
 
 #undef Architecture
 

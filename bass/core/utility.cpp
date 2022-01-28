@@ -1,4 +1,4 @@
-auto Bass::setMacro(const string& name, const string_vector& parameters, uint ip, bool inlined, Frame::Level level) -> void {
+auto Bass::setMacro(const string& name, const vector<string>& parameters, uint ip, bool inlined, Frame::Level level) -> void {
   if(!validate(name)) error("invalid macro identifier: ", name);
   string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -40,7 +40,7 @@ auto Bass::findMacro(const string& name) -> maybe<Macro&> {
   return nothing;
 }
 
-auto Bass::setDefine(const string& name, const string_vector& parameters, const string& value, Frame::Level level) -> void {
+auto Bass::setDefine(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void {
   if(!validate(name)) error("invalid define identifier: ", name);
   string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -81,7 +81,7 @@ auto Bass::findDefine(const string& name) -> maybe<Define&> {
   return nothing;
 }
 
-auto Bass::setExpression(const string& name, const string_vector& parameters, const string& value, Frame::Level level) -> void {
+auto Bass::setExpression(const string& name, const vector<string>& parameters, const string& value, Frame::Level level) -> void {
   if(!validate(name)) error("invalid expression identifier: ", name);
   string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -238,7 +238,7 @@ auto Bass::evaluateDefines(string& s) -> void {
         return evaluateDefines(s);
       }
 
-      string_vector parameters;
+      vector<string> parameters;
       if(name.match("?*(*)")) {
         auto p = name.trimRight(")", 1L).split("(", 1L).strip();
         name = p(0);
@@ -280,8 +280,8 @@ auto Bass::filepath() -> string {
 }
 
 //split argument list by commas, being aware of parenthesis depth and quotes
-auto Bass::split(const string& s) -> string_vector {
-  string_vector result;
+auto Bass::split(const string& s) -> vector<string> {
+  vector<string> result;
   uint offset = 0;
   char quoted = 0;
   uint depth = 0;

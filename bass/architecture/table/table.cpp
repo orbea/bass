@@ -18,7 +18,7 @@ auto Table::assemble(const string& statement) -> bool {
   for(auto& opcode : table) {
     if(!tokenize(s, opcode.pattern)) continue;
 
-    string_vector args;
+    vector<string> args;
     tokenize(args, s, opcode.pattern);
     if(args.size() != opcode.number.size()) continue;
 
