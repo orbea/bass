@@ -20,7 +20,7 @@
 #include <nall/location.hpp>
 #include <nall/string.hpp>
 #include <nall/inode.hpp>
-#include <nall/hash/sha256.hpp>
+#include <nall/hash.hpp>
 #include <nall/file-buffer.hpp>
 #include <nall/file.hpp>
 #include <nall/directory.hpp>
