@@ -1,3 +1,5 @@
+#pragma once
+
 struct Architecture {
   Architecture(Bass& self) : self(self) {
   }

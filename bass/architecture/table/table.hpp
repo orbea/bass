@@ -1,3 +1,5 @@
+#pragma once
+
 struct Table : Architecture {
   Table(Bass& self, const nall::string& table);
   auto assemble(const nall::string& statement) -> bool override;
