@@ -17,6 +17,7 @@
 #include <nall/primitives.hpp>
 #include <nall/vector.hpp>
 #include <nall/shared-pointer.hpp>
+#include <nall/location.hpp>
 #include <nall/string.hpp>
 #include <nall/inode.hpp>
 #include <nall/hash/sha256.hpp>
