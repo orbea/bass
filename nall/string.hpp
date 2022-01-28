@@ -44,14 +44,6 @@ protected:
   mutable int _size;
 };
 
-//adaptive (SSO + COW) is by far the best choice, the others exist solely to:
-//1) demonstrate the performance benefit of combining SSO + COW
-//2) rule out allocator bugs by trying different allocators when needed
-#define NALL_STRING_ALLOCATOR_ADAPTIVE
-//#define NALL_STRING_ALLOCATOR_COPY_ON_WRITE
-//#define NALL_STRING_ALLOCATOR_SMALL_STRING_OPTIMIZATION
-//#define NALL_STRING_ALLOCATOR_VECTOR
-
 //cast.hpp
 template<typename T> struct stringify;
 
@@ -80,7 +72,6 @@ struct string {
   using type = string;
 
 protected:
-  #if defined(NALL_STRING_ALLOCATOR_ADAPTIVE)
   enum : uint { SSO = 24 };
   union {
     struct {  //copy-on-write
@@ -94,26 +85,6 @@ protected:
   auto _allocate() -> void;
   auto _copy() -> void;
   auto _resize() -> void;
-  #endif
-
-  #if defined(NALL_STRING_ALLOCATOR_COPY_ON_WRITE)
-  char* _data;
-  mutable uint* _refs;
-  auto _allocate() -> char*;
-  auto _copy() -> char*;
-  #endif
-
-  #if defined(NALL_STRING_ALLOCATOR_SMALL_STRING_OPTIMIZATION)
-  enum : uint { SSO = 24 };
-  union {
-    char* _data;
-    char _text[SSO];
-  };
-  #endif
-
-  #if defined(NALL_STRING_ALLOCATOR_VECTOR)
-  char* _data;
-  #endif
 
   uint _capacity;
   uint _size;
