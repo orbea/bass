@@ -1,20 +1,8 @@
 #pragma once
 
-#include <nall/file.hpp>
-#include <nall/function.hpp>
-#include <nall/inode.hpp>
-#include <nall/intrinsics.hpp>
-#include <nall/merge-sort.hpp>
-#include <nall/string.hpp>
-#include <nall/vector.hpp>
-
-#if defined(PLATFORM_WINDOWS)
-  #include <nall/windows/utf8.hpp>
-#else
-  #include <dirent.h>
-  #include <stdio.h>
-  #include <sys/types.h>
-#endif
+#include <dirent.h>
+#include <stdio.h>
+#include <sys/types.h>
 
 namespace nall {
 

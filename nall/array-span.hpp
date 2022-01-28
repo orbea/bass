@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nall/array-view.hpp>
-
 namespace nall {
 
 template<typename T> struct array_span : array_view<T> {

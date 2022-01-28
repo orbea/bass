@@ -11,9 +11,6 @@
 //  bool T::operator==(const T&) const;
 //  bool T::operator< (const T&) const;
 
-#include <nall/utility.hpp>
-#include <nall/vector.hpp>
-
 namespace nall {
 
 template<typename T> struct set {

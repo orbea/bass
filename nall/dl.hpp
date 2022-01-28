@@ -2,17 +2,7 @@
 
 //dynamic linking support
 
-#include <nall/intrinsics.hpp>
-#include <nall/path.hpp>
-#include <nall/stdint.hpp>
-#include <nall/string.hpp>
-#include <nall/utility.hpp>
-
-#if defined(PLATFORM_WINDOWS)
-  #include <nall/windows/utf8.hpp>
-#else
-  #include <dlfcn.h>
-#endif
+#include <dlfcn.h>
 
 namespace nall {
 

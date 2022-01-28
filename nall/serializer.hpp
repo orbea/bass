@@ -11,13 +11,6 @@
 //- only plain-old-data can be stored. complex classes must provide serialize(serializer&);
 //- floating-point usage is not portable across different implementations
 
-#include <nall/array.hpp>
-#include <nall/bit.hpp>
-#include <nall/range.hpp>
-#include <nall/stdint.hpp>
-#include <nall/traits.hpp>
-#include <nall/utility.hpp>
-
 namespace nall {
 
 struct serializer;

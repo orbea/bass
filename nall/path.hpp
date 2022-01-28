@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nall/string.hpp>
-
 namespace nall::Path {
 
 inline auto active() -> string {

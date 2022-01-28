@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nall/stdint.hpp>
-
 namespace nall {
 
 template<uint bits, typename T> inline auto uclamp(T x) -> uint64_t {
