@@ -1,5 +1,20 @@
 #pragma once
 
+#include <mutex>
+
+#include <assert.h>
+#include <limits.h>
+#include <string.h>
+#include <utime.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <sys/stat.h>
+
+#include <dlfcn.h>
+#include <pwd.h>
+#include <grp.h>
+
 namespace nall {
   using uint = unsigned;
 
@@ -37,6 +52,14 @@ namespace nall {
 #endif
 
 }
+
+#if defined(COMPILER_CLANG) || defined(COMPILER_GCC)
+  #define noinline   __attribute__((noinline))
+  #define alwaysinline  inline __attribute__((always_inline))
+#else
+  #define noinline
+  #define alwaysinline  inline
+#endif
 
 /* Platform detection */
 
