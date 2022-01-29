@@ -11,43 +11,43 @@
 
 void nall::main(Arguments arguments) {
   if(!arguments) {
-    print(stderr, "bass v18\n");
-    print(stderr, "\n");
-    print(stderr, "usage:\n");
-    print(stderr, "  bass [options] source [source ...]\n");
-    print(stderr, "\n");
-    print(stderr, "options:\n");
-    print(stderr, "  -o target        specify default output filename [overwrite]\n");
-    print(stderr, "  -m target        specify default output filename [modify]\n");
-    print(stderr, "  -d name[=value]  create define with optional value\n");
-    print(stderr, "  -c name[=value]  create constant with optional value\n");
-    print(stderr, "  -strict          upgrade warnings to errors\n");
-    print(stderr, "  -benchmark       benchmark performance\n");
+    nall::print(stderr, "bass v18\n");
+    nall::print(stderr, "\n");
+    nall::print(stderr, "usage:\n");
+    nall::print(stderr, "  bass [options] source [source ...]\n");
+    nall::print(stderr, "\n");
+    nall::print(stderr, "options:\n");
+    nall::print(stderr, "  -o target        specify default output filename [overwrite]\n");
+    nall::print(stderr, "  -m target        specify default output filename [modify]\n");
+    nall::print(stderr, "  -d name[=value]  create define with optional value\n");
+    nall::print(stderr, "  -c name[=value]  create constant with optional value\n");
+    nall::print(stderr, "  -strict          upgrade warnings to errors\n");
+    nall::print(stderr, "  -benchmark       benchmark performance\n");
     exit(EXIT_FAILURE);
   }
 
-  string targetFilename;
+  nall::string targetFilename;
   bool create = false;
   if(arguments.take("-o", targetFilename)) create = true;
   if(arguments.take("-m", targetFilename)) create = false;
 
-  vector<string> defines;
-  string define;
+  nall::vector<nall::string> defines;
+  nall::string define;
   while(arguments.take("-d", define)) defines.append(define);
 
-  vector<string> constants;
-  string constant;
+  nall::vector<nall::string> constants;
+  nall::string constant;
   while(arguments.take("-c", constant)) constants.append(constant);
 
   bool strict = arguments.take("-strict");
   bool benchmark = arguments.take("-benchmark");
 
   if(arguments.find("-*")) {
-    print(stderr, "error: unrecognized argument(s)\n");
+    nall::print(stderr, "error: unrecognized argument(s)\n");
     exit(EXIT_FAILURE);
   }
 
-  vector<string> sourceFilenames;
+  nall::vector<nall::string> sourceFilenames;
   for(auto& argument : arguments) sourceFilenames.append(argument);
 
   clock_t clockStart = clock();
@@ -65,11 +65,11 @@ void nall::main(Arguments arguments) {
     bass.constant(p(0), p(1, "1"));
   }
   if(!bass.assemble(strict)) {
-    print(stderr, "bass: assembly failed\n");
+    nall::print(stderr, "bass: assembly failed\n");
     exit(EXIT_FAILURE);
   }
   clock_t clockFinish = clock();
   if(benchmark) {
-    print(stderr, "bass: assembled in ", (double)(clockFinish - clockStart) / CLOCKS_PER_SEC, " seconds\n");
+    nall::print(stderr, "bass: assembled in ", (double)(clockFinish - clockStart) / CLOCKS_PER_SEC, " seconds\n");
   }
 }
