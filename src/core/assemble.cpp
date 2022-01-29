@@ -208,7 +208,7 @@ bool Bass::assemble(const nall::string& statement) {
       warning("file not found: ", filename);
       return true;
     }
-    if(!nall::file::remove(filename)) {
+    if(!nall::inode::remove(filename)) {
       warning("unable to delete file: ", filename);
       return true;
     }

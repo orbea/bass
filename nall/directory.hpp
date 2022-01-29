@@ -2,7 +2,7 @@
 
 namespace nall {
 
-struct directory : inode {
+struct directory {
   directory() = delete;
 
   static auto exists(const string& pathname) -> bool;

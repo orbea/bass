@@ -2,7 +2,7 @@
 
 namespace nall {
 
-struct file : inode {
+struct file {
   struct mode { enum : unsigned { read, write, modify, append }; };
   struct index { enum : unsigned { absolute, relative }; };
 
@@ -28,7 +28,7 @@ struct file : inode {
   static auto move(const string& sourcename, const string& targetname) -> bool {
     if(sourcename == targetname) return true;
     if(rename(sourcename, targetname)) return true;
-    if(!writable(sourcename)) return false;
+    if(!inode::writable(sourcename)) return false;
     if(copy(sourcename, targetname)) return remove(sourcename), true;
     return false;
   }
