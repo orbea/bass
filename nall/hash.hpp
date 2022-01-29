@@ -1,5 +1,16 @@
 #pragma once
 
+//multi-precision arithmetic
+
+namespace nall {
+
+template<typename T, typename U>
+inline auto ror(T lhs, U rhs, std::enable_if_t<std::is_unsigned<T>::value>* = 0) -> T {
+  return lhs >> rhs | lhs << sizeof(T) * 8 - rhs;
+}
+
+}
+
 namespace nall::Hash {
 
 struct Hash {

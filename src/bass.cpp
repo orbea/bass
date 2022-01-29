@@ -19,7 +19,6 @@
 #include <nall/shared-pointer.hpp>
 #include <nall/string.hpp>
 #include <nall/location.hpp>
-#include <nall/arithmetic.hpp>
 #include <nall/inode.hpp>
 #include <nall/hash.hpp>
 #include <nall/file-buffer.hpp>
