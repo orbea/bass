@@ -4,10 +4,10 @@ namespace nall {
 
 template<uint bits, typename T> inline auto uclamp(T x) -> uint64_t {
   enum : uint64_t { b = 1ull << (bits - 1), y = b * 2 - 1 };
-  if constexpr(is_unsigned_v<T>) {
+  if constexpr(std::is_unsigned_v<T>) {
     return y + ((x - y) & -(x < y));  //min(x, y);
   }
-  if constexpr(is_signed_v<T>) {
+  if constexpr(std::is_signed_v<T>) {
     return x < 0 ? 0 : x > y ? y : x;
   }
 }

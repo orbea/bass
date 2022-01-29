@@ -4,7 +4,6 @@
 
 #include <nall/intrinsics.hpp>
 #include <nall/stdint.hpp>
-#include <nall/traits.hpp>
 #include <nall/memory.hpp>
 #include <nall/iterator.hpp>
 #include <nall/range.hpp>

@@ -93,7 +93,7 @@ public:
   string();
   string(string& source) : string() { operator=(source); }
   string(const string& source) : string() { operator=(source); }
-  string(string&& source) : string() { operator=(move(source)); }
+  string(string&& source) : string() { operator=(std::move(source)); }
   template<typename T = char> auto get() -> T*;
   template<typename T = char> auto data() const -> const T*;
   template<typename T = char> auto size() const -> uint { return _size / sizeof(T); }
@@ -105,7 +105,7 @@ public:
   auto operator=(string&&) -> type&;
 
   template<typename T, typename... P> string(T&& s, P&&... p) : string() {
-    append(forward<T>(s), forward<P>(p)...);
+    append(std::forward<T>(s), std::forward<P>(p)...);
   }
   ~string() { reset(); }
 
@@ -256,12 +256,12 @@ template<> struct vector<string> : vector_base<string> {
 
   vector(const vector& source) { vector_base::operator=(source); }
   vector(vector& source) { vector_base::operator=(source); }
-  vector(vector&& source) { vector_base::operator=(move(source)); }
-  template<typename... P> vector(P&&... p) { append(forward<P>(p)...); }
+  vector(vector&& source) { vector_base::operator=(std::move(source)); }
+  template<typename... P> vector(P&&... p) { append(std::forward<P>(p)...); }
 
   auto operator=(const vector& source) -> type& { return vector_base::operator=(source), *this; }
   auto operator=(vector& source) -> type& { return vector_base::operator=(source), *this; }
-  auto operator=(vector&& source) -> type& { return vector_base::operator=(move(source)), *this; }
+  auto operator=(vector&& source) -> type& { return vector_base::operator=(std::move(source)), *this; }
 
   //vector.hpp
   template<typename... P> auto append(const string&, P&&...) -> type&;
@@ -281,7 +281,7 @@ template<> struct vector<string> : vector_base<string> {
 struct string_format : vector<string> {
   using type = string_format;
 
-  template<typename... P> string_format(P&&... p) { reserve(sizeof...(p)); append(forward<P>(p)...); }
+  template<typename... P> string_format(P&&... p) { reserve(sizeof...(p)); append(std::forward<P>(p)...); }
   template<typename T, typename... P> auto append(const T&, P&&... p) -> type&;
   auto append() -> type&;
 };

@@ -40,15 +40,15 @@ struct Architecture {
   }
 
   template<typename... P> void notice(P&&... p) {
-    return self.notice(nall::forward<P>(p)...);
+    return self.notice(std::forward<P>(p)...);
   }
 
   template<typename... P> void warning(P&&... p) {
-    return self.warning(nall::forward<P>(p)...);
+    return self.warning(std::forward<P>(p)...);
   }
 
   template<typename... P> void error(P&&... p) {
-    return self.error(nall::forward<P>(p)...);
+    return self.error(std::forward<P>(p)...);
   }
 
   Bass& self;

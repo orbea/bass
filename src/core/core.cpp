@@ -139,13 +139,13 @@ void Bass::printInstruction() {
 }
 
 template<typename... P> void Bass::notice(P&&... p) {
-  nall::string s{nall::forward<P>(p)...};
+  nall::string s{std::forward<P>(p)...};
   print(stderr, nall::terminal::color::gray("notice: "), s, "\n");
   printInstruction();
 }
 
 template<typename... P> void Bass::warning(P&&... p) {
-  nall::string s{nall::forward<P>(p)...};
+  nall::string s{std::forward<P>(p)...};
   print(stderr, nall::terminal::color::yellow("warning: "), s, "\n");
   if(!strict) {
     printInstruction();
@@ -158,7 +158,7 @@ template<typename... P> void Bass::warning(P&&... p) {
 }
 
 template<typename... P> void Bass::error(P&&... p) {
-  nall::string s{nall::forward<P>(p)...};
+  nall::string s{std::forward<P>(p)...};
   print(stderr, nall::terminal::color::red("error: "), s, "\n");
   printInstructionStack();
 
