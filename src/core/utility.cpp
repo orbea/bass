@@ -105,7 +105,7 @@ void Bass::setExpression(const nall::string& name, const nall::vector<nall::stri
   }
 }
 
-nall::maybe<Bass::Expression&> Bass::findExpression(const nall::string& name) {
+nall::maybe<Bass::Define&> Bass::findExpression(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& expressions = frames[n].expressions;
     auto s = scope;
@@ -173,7 +173,7 @@ void Bass::setConstant(const nall::string& name, int64_t value) {
   }
 }
 
-nall::maybe<Bass::Constant&> Bass::findConstant(const nall::string& name) {
+nall::maybe<Bass::Variable&> Bass::findConstant(const nall::string& name) {
   auto s = scope;
   while(true) {
     nall::string scopedName = {s.merge("."), s ? "." : "", name};

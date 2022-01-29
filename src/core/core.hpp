@@ -51,8 +51,6 @@ struct Bass {
     nall::string value;
   };
 
-  using Expression = Define;  //Define and Expression structures are identical
-
   struct Variable {
     Variable() {}
     Variable(const nall::string& name) : name(name) {}
@@ -65,8 +63,6 @@ struct Bass {
     nall::string name;
     int64_t value;
   };
-
-  using Constant = Variable;  //Variable and Constant structures are identical
 
   struct Array {
     Array() {}
@@ -94,7 +90,7 @@ struct Bass {
 
     nall::hashset<Macro> macros;
     nall::hashset<Define> defines;
-    nall::hashset<Expression> expressions;
+    nall::hashset<Define> expressions;
     nall::hashset<Variable> variables;
     nall::hashset<Array> arrays;
   };
@@ -177,13 +173,13 @@ protected:
   nall::maybe<Bass::Define&> findDefine(const nall::string& name);
 
   void setExpression(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level);
-  nall::maybe<Bass::Expression&> findExpression(const nall::string& name);
+  nall::maybe<Bass::Define&> findExpression(const nall::string& name);
 
   void setVariable(const nall::string& name, int64_t value, Frame::Level level);
   nall::maybe<Bass::Variable&> findVariable(const nall::string& name);
 
   void setConstant(const nall::string& name, int64_t value);
-  nall::maybe<Bass::Constant&> findConstant(const nall::string& name);
+  nall::maybe<Bass::Variable&> findConstant(const nall::string& name);
 
   void setArray(const nall::string& name, const nall::vector<int64_t>& values, Frame::Level level);
   nall::maybe<Bass::Array&> findArray(const nall::string& name);
@@ -204,7 +200,7 @@ protected:
   nall::vector<Instruction> program;    //parsed source code statements
   nall::vector<Block> blocks;           //track the start and end of blocks
   std::set<Define> defines;             //defines specified on the terminal
-  nall::hashset<Constant> constants;    //constants support forward-declaration
+  nall::hashset<Variable> constants;    //constants support forward-declaration
   nall::vector<Frame> frames;           //macros, defines and variables do not
   nall::vector<bool> conditionals;      //track conditional matching
   nall::vector<nall::string> queue;            //track enqueue, dequeue directives
