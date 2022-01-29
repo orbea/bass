@@ -166,7 +166,7 @@ bool Bass::assemble(const nall::string& statement) {
       auto source = evaluate(p(0));
       auto target = evaluate(p(1));
       auto length = evaluate(p(2));
-      nall::vector<u8> memory;
+      nall::vector<uint8_t> memory;
       memory.resize(length);
       targetFile.seek(source);
       targetFile.read(memory);
