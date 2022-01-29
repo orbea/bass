@@ -113,14 +113,14 @@ struct Bass {
     };
 
   public:
-    nall::vector<_EmitBytesOp> EmitBytes;
+    std::vector<_EmitBytesOp> EmitBytes;
 
     Directives()
     : EmitBytes ({ {"db ", 1}, {"dw ", 2}, {"dl ", 3}, {"dd ", 4}, {"dq ", 8}})
     {}
     
     void add(nall::string token, unsigned dataLength) {
-      EmitBytes.append( {token, dataLength} );
+      EmitBytes.push_back( {token, dataLength} );
     }
   };
 
@@ -145,7 +145,7 @@ protected:
   int64_t evaluate(const nall::string& expression, Evaluation mode = Evaluation::Default);
   int64_t evaluate(nall::Eval::Node* node, Evaluation mode);
   int64_t quantifyParameters(nall::Eval::Node* node);
-  nall::vector<int64_t> evaluateParameters(nall::Eval::Node* node, Evaluation mode);
+  std::vector<int64_t> evaluateParameters(nall::Eval::Node* node, Evaluation mode);
   int64_t evaluateExpression(nall::Eval::Node* node, Evaluation mode);
   nall::string evaluateString(nall::Eval::Node* node);
   int64_t evaluateLiteral(nall::Eval::Node* node, Evaluation mode);

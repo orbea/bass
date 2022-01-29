@@ -67,11 +67,11 @@ int64_t Bass::quantifyParameters(nall::Eval::Node* node) {
   return 1;  //any other type here signifies one argument
 }
 
-nall::vector<int64_t> Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) {
-  nall::vector<int64_t> result;
+std::vector<int64_t> Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) {
+  std::vector<int64_t> result;
   if(node->type == nall::Eval::Node::Type::Null) return result;
-  if(node->type != nall::Eval::Node::Type::Separator) { result.append(evaluate(node, mode)); return result; }
-  for(auto& link : node->link) result.append(evaluate(link, mode));
+  if(node->type != nall::Eval::Node::Type::Separator) { result.push_back(evaluate(node, mode)); return result; }
+  for(auto& link : node->link) result.push_back(evaluate(link, mode));
   return result;
 }
 
@@ -128,12 +128,12 @@ int64_t Bass::evaluateExpression(nall::Eval::Node* node, Evaluation mode) {
 
   if(auto expression = findExpression(name)) {
     auto parameters = evaluateParameters(node->link[1], mode);
-    if(parameters) frames.append({0, true});
+    if(!parameters.empty()) frames.append({0, true});
     for(auto n : nall::range(parameters.size())) {
-      setVariable(expression().parameters(n), evaluate(parameters(n)), Frame::Level::Inline);
+      setVariable(expression().parameters(n), evaluate(parameters.size()), Frame::Level::Inline);
     }
     auto result = evaluate(expression().value);
-    if(parameters) frames.removeRight();
+    if(!parameters.empty()) frames.removeRight();
     return result;
   }
 
