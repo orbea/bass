@@ -24,18 +24,10 @@ template<typename T, uint Size> struct array<T[Size]> {
   }
 
   alwaysinline auto operator[](uint index) -> T& {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(index >= Size) throw out_of_bounds{};
-    #endif
     return values[index];
   }
 
   alwaysinline auto operator[](uint index) const -> const T& {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(index >= Size) throw out_of_bounds{};
-    #endif
     return values[index];
   }
 
@@ -66,18 +58,12 @@ private:
 template<typename T, T... p> inline auto from_array(uint index) -> T {
   static const array<T[sizeof...(p)]> table{p...};
   struct out_of_bounds {};
-  #if defined(DEBUG)
-  if(index >= sizeof...(p)) throw out_of_bounds{};
-  #endif
   return table[index];
 }
 
 template<int64_t... p> inline auto from_array(uint index) -> int64_t {
   static const array<int64_t[sizeof...(p)]> table{p...};
   struct out_of_bounds {};
-  #if defined(DEBUG)
-  if(index >= sizeof...(p)) throw out_of_bounds{};
-  #endif
   return table[index];
 }
 

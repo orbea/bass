@@ -124,10 +124,6 @@ inline auto string::_resize() -> void {
 }
 
 inline auto string::operator[](uint position) const -> const char& {
-  #ifdef DEBUG
-  struct out_of_bounds {};
-  if(position >= size() + 1) throw out_of_bounds{};
-  #endif
   return data()[position];
 }
 

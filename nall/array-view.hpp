@@ -23,10 +23,6 @@ template<typename T> struct array_view {
   explicit operator bool() const { return _data && _size > 0; }
 
   operator const T*() const {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(_size < 0) throw out_of_bounds{};
-    #endif
     return _data;
   }
 
@@ -40,10 +36,6 @@ template<typename T> struct array_view {
   auto operator+=(int distance) -> type& { _data += distance; _size -= distance; return *this; }
 
   auto operator[](uint index) const -> const T& {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(index >= _size) throw out_of_bounds{};
-    #endif
     return _data[index];
   }
 
@@ -69,10 +61,6 @@ template<typename T> struct array_view {
   }
 
   auto view(uint offset, uint length) const -> type {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(offset + length >= _size) throw out_of_bounds{};
-    #endif
     return {_data + offset, length};
   }
 

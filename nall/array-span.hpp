@@ -41,10 +41,6 @@ template<typename T> struct array_span : array_view<T> {
   }
 
   auto span(uint offset, uint length) const -> type {
-    #ifdef DEBUG
-    struct out_of_bounds {};
-    if(offset + length >= super::_size) throw out_of_bounds{};
-    #endif
     return {super::_data + offset, length};
   }
 
