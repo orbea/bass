@@ -29,7 +29,7 @@ inline string_view::string_view(const char* data) {
   _size = -1;  //defer length calculation, as it is often unnecessary
 }
 
-inline string_view::string_view(const char* data, uint size) {
+inline string_view::string_view(const char* data, unsigned size) {
   _string = nullptr;
   _data = data;
   _size = size;
@@ -81,7 +81,7 @@ inline auto string_view::data() const -> const char* {
   return _data;
 }
 
-inline auto string_view::size() const -> uint {
+inline auto string_view::size() const -> unsigned {
   if(_size < 0) _size = strlen(_data);
   return _size;
 }

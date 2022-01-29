@@ -1,7 +1,7 @@
 void Bass::initialize() {
   queue.reset();
   scope.reset();
-  for(uint n : nall::range(256)) stringTable[n] = n;
+  for(unsigned n : nall::range(256)) stringTable[n] = n;
   endian = Endian::LSB;
   origin = 0;
   base = 0;
@@ -171,7 +171,7 @@ bool Bass::assemble(const nall::string& statement) {
       targetFile.seek(source);
       targetFile.read(memory);
       targetFile.seek(target);
-      for(uint offset : nall::range(length)) write(memory[offset]);
+      for(unsigned offset : nall::range(length)) write(memory[offset]);
       targetFile.seek(origin);
       return true;
     }
@@ -186,9 +186,9 @@ bool Bass::assemble(const nall::string& statement) {
     nall::string filename = {filepath(), text(p.take(0))};
     auto fp = nall::file::open(filename, nall::file::mode::read);
     if(!fp) error("file not found: ", filename);
-    uint offset = p.size() ? evaluate(p.take(0)) : 0;
+    unsigned offset = p.size() ? evaluate(p.take(0)) : 0;
     if(offset > fp.size()) offset = fp.size();
-    uint length = p.size() ? evaluate(p.take(0)) : 0;
+    unsigned length = p.size() ? evaluate(p.take(0)) : 0;
     if(length == 0) length = fp.size() - offset;
     if(name) {
       setConstant({name}, pc());
@@ -218,8 +218,8 @@ bool Bass::assemble(const nall::string& statement) {
   //fill length [, with]
   if(s.match("fill ?*")) {
     auto p = split(s.trimLeft("fill ", 1L));
-    uint length = evaluate(p(0));
-    uint byte = evaluate(p(1, "0"));
+    unsigned length = evaluate(p(0));
+    unsigned byte = evaluate(p(1, "0"));
     while(length--) write(byte);
     return true;
   }
@@ -237,8 +237,8 @@ bool Bass::assemble(const nall::string& statement) {
   }
 
   //d[bwldq] ("string"|variable) [, ...]
-  uint dataLength = 0;
-  uint tokenLength = 0;
+  unsigned dataLength = 0;
+  unsigned tokenLength = 0;
   for(auto& d : directives.EmitBytes) {
     // make sure to have & consume a space
     if(s.beginsWith(d.token)) {

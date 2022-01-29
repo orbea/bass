@@ -111,7 +111,7 @@ struct vector_base {
   auto find(const T& value) const -> maybe<uint64_t>;
   auto findSorted(const T& value) const -> maybe<uint64_t>;
   auto foreach(const function<void (const T&)>& callback) -> void;
-  auto foreach(const function<void (uint, const T&)>& callback) -> void;
+  auto foreach(const function<void (unsigned, const T&)>& callback) -> void;
 
 protected:
   T* _pool = nullptr;   //pointer to first initialized element in pool

@@ -26,14 +26,14 @@ bool Bass::source(const nall::string& filename) {
     return false;
   }
 
-  uint fileNumber = sourceFilenames.size();
+  unsigned fileNumber = sourceFilenames.size();
   sourceFilenames.append(filename);
 
   nall::string data = nall::file::read(filename);
   data.transform("\t\r", "  ");
 
   auto lines = data.split("\n");
-  for(uint lineNumber : nall::range(lines.size())) {
+  for(unsigned lineNumber : nall::range(lines.size())) {
     //remove single-line comments
     if(auto position = lines[lineNumber].qfind("//")) {
       lines[lineNumber].resize(position());
@@ -41,7 +41,7 @@ bool Bass::source(const nall::string& filename) {
 
     //allow multiple statements per line, separated by ';'
     auto blocks = lines[lineNumber].qsplit(";").strip();
-    for(uint blockNumber : nall::range(blocks.size())) {
+    for(unsigned blockNumber : nall::range(blocks.size())) {
       nall::string statement = blocks[blockNumber];
       strip(statement);
       if(!statement) continue;
@@ -97,16 +97,16 @@ bool Bass::assemble(bool strict) {
 
 //internal
 
-uint Bass::pc() const {
+unsigned Bass::pc() const {
   return origin + base;
 }
 
-void Bass::seek(uint offset) {
+void Bass::seek(unsigned offset) {
   if(!targetFile) return;
   if(writePhase()) targetFile.seek(offset);
 }
 
-void Bass::track(uint length) {
+void Bass::track(unsigned length) {
   if(!tracker.enable) return;
   uint64_t address = targetFile.offset();
   for(auto n : nall::range(length)) {
@@ -117,15 +117,15 @@ void Bass::track(uint length) {
   }
 }
 
-void Bass::write(uint64_t data, uint length) {
+void Bass::write(uint64_t data, unsigned length) {
   if(writePhase()) {
     if(targetFile) {
       track(length);
       if(endian == Endian::LSB) targetFile.writel(data, length);
       if(endian == Endian::MSB) targetFile.writem(data, length);
     } else if(!isatty(fileno(stdout))) {
-      if(endian == Endian::LSB) for(uint n : nall::range(length)) fputc(data >> n * 8, stdout);
-      if(endian == Endian::MSB) for(uint n : nall::reverse(nall::range(length))) fputc(data >> n * 8, stdout);
+      if(endian == Endian::LSB) for(unsigned n : nall::range(length)) fputc(data >> n * 8, stdout);
+      if(endian == Endian::MSB) for(unsigned n : nall::reverse(nall::range(length))) fputc(data >> n * 8, stdout);
     }
   }
   origin += length;

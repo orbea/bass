@@ -7,11 +7,11 @@ struct Table : Architecture {
 private:
   struct Prefix {
     nall::string text;
-    uint size;
+    unsigned size;
   };
 
   struct Number {
-    uint bits;
+    unsigned bits;
   };
 
   struct Format {
@@ -24,10 +24,10 @@ private:
         Negative,
         NegativeShiftRight
     } type;
-    enum class Match : uint { Exact, Strong, Weak } match;
-    uint data;
-    uint bits;
-    uint argument;
+    enum class Match : unsigned { Exact, Strong, Weak } match;
+    unsigned data;
+    unsigned bits;
+    unsigned argument;
     int displacement;
   };
 
@@ -38,8 +38,8 @@ private:
     nall::string pattern;
   };
 
-  uint bitLength(nall::string& text) const;
-  void writeBits(uint64_t data, uint bits);
+  unsigned bitLength(nall::string& text) const;
+  void writeBits(uint64_t data, unsigned bits);
   bool parseTable(const nall::string& text);
   void parseDirective(nall::string& line);
   void assembleTableLHS(Opcode& opcode, const nall::string& text);

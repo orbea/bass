@@ -22,7 +22,7 @@ struct string_view {
   string_view(const string_view& source);
   string_view(string_view&& source);
   string_view(const char* data);
-  string_view(const char* data, uint size);
+  string_view(const char* data, unsigned size);
   string_view(const string& source);
   template<typename... P> string_view(P&&... p);
   ~string_view();
@@ -33,7 +33,7 @@ struct string_view {
   explicit operator bool() const;
   operator const char*() const;
   auto data() const -> const char*;
-  auto size() const -> uint;
+  auto size() const -> unsigned;
 
   auto begin() const { return &_data[0]; }
   auto end() const { return &_data[size()]; }
@@ -60,23 +60,23 @@ auto tokenize(const char* s, const char* p) -> bool;
 auto tokenize(vector<string>& list, const char* s, const char* p) -> bool;
 
 //utf8.hpp
-auto characters(string_view self, int offset = 0, int length = -1) -> uint;
+auto characters(string_view self, int offset = 0, int length = -1) -> unsigned;
 
 //utility.hpp
 auto slice(string_view self, int offset = 0, int length = -1) -> string;
 template<typename T> auto fromInteger(char* result, T value) -> char*;
 template<typename T> auto fromNatural(char* result, T value) -> char*;
-template<typename T> auto fromReal(char* str, T value) -> uint;
+template<typename T> auto fromReal(char* str, T value) -> unsigned;
 
 struct string {
   using type = string;
 
 protected:
-  enum : uint { SSO = 24 };
+  enum : unsigned { SSO = 24 };
   union {
     struct {  //copy-on-write
       char* _data;
-      uint* _refs;
+      unsigned* _refs;
     };
     struct {  //small-string-optimization
       char _text[SSO];
@@ -86,8 +86,8 @@ protected:
   auto _copy() -> void;
   auto _resize() -> void;
 
-  uint _capacity;
-  uint _size;
+  unsigned _capacity;
+  unsigned _size;
 
 public:
   string();
@@ -96,11 +96,11 @@ public:
   string(string&& source) : string() { operator=(std::move(source)); }
   template<typename T = char> auto get() -> T*;
   template<typename T = char> auto data() const -> const T*;
-  template<typename T = char> auto size() const -> uint { return _size / sizeof(T); }
-  template<typename T = char> auto capacity() const -> uint { return _capacity / sizeof(T); }
+  template<typename T = char> auto size() const -> unsigned { return _size / sizeof(T); }
+  template<typename T = char> auto capacity() const -> unsigned { return _capacity / sizeof(T); }
   auto reset() -> type&;
-  auto reserve(uint) -> type&;
-  auto resize(uint) -> type&;
+  auto reserve(unsigned) -> type&;
+  auto resize(unsigned) -> type&;
   auto operator=(const string&) -> type&;
   auto operator=(string&&) -> type&;
 
@@ -146,8 +146,8 @@ public:
   auto real() const -> double;
 
   //core.hpp
-  auto operator[](uint) const -> const char&;
-  auto operator()(uint, char = 0) const -> char;
+  auto operator[](unsigned) const -> const char&;
+  auto operator()(unsigned, char = 0) const -> char;
   template<typename... P> auto assign(P&&...) -> type&;
   template<typename T, typename... P> auto prepend(const T&, P&&...) -> type&;
   template<typename... P> auto prepend(const nall::string_format&, P&&...) -> type&;
@@ -155,32 +155,32 @@ public:
   template<typename T, typename... P> auto append(const T&, P&&...) -> type&;
   template<typename... P> auto append(const nall::string_format&, P&&...) -> type&;
   template<typename T> auto _append(const stringify<T>&) -> type&;
-  auto length() const -> uint;
+  auto length() const -> unsigned;
 
   //find.hpp
-  auto contains(string_view characters) const -> maybe<uint>;
+  auto contains(string_view characters) const -> maybe<unsigned>;
 
-  template<bool, bool> auto _find(int, string_view) const -> maybe<uint>;
+  template<bool, bool> auto _find(int, string_view) const -> maybe<unsigned>;
 
-  auto find(string_view source) const -> maybe<uint>;
-  auto ifind(string_view source) const -> maybe<uint>;
-  auto qfind(string_view source) const -> maybe<uint>;
-  auto iqfind(string_view source) const -> maybe<uint>;
+  auto find(string_view source) const -> maybe<unsigned>;
+  auto ifind(string_view source) const -> maybe<unsigned>;
+  auto qfind(string_view source) const -> maybe<unsigned>;
+  auto iqfind(string_view source) const -> maybe<unsigned>;
 
-  auto findFrom(int offset, string_view source) const -> maybe<uint>;
-  auto ifindFrom(int offset, string_view source) const -> maybe<uint>;
+  auto findFrom(int offset, string_view source) const -> maybe<unsigned>;
+  auto ifindFrom(int offset, string_view source) const -> maybe<unsigned>;
 
-  auto findNext(int offset, string_view source) const -> maybe<uint>;
-  auto ifindNext(int offset, string_view source) const -> maybe<uint>;
+  auto findNext(int offset, string_view source) const -> maybe<unsigned>;
+  auto ifindNext(int offset, string_view source) const -> maybe<unsigned>;
 
-  auto findPrevious(int offset, string_view source) const -> maybe<uint>;
-  auto ifindPrevious(int offset, string_view source) const -> maybe<uint>;
+  auto findPrevious(int offset, string_view source) const -> maybe<unsigned>;
+  auto ifindPrevious(int offset, string_view source) const -> maybe<unsigned>;
 
   //format.hpp
   auto format(const nall::string_format& params) -> type&;
 
   //compare.hpp
-  template<bool> static auto _compare(const char*, uint, const char*, uint) -> int;
+  template<bool> static auto _compare(const char*, unsigned, const char*, unsigned) -> int;
 
   static auto compare(string_view, string_view) -> int;
   static auto icompare(string_view, string_view) -> int;
@@ -237,14 +237,14 @@ public:
   auto stripRight() -> type&;
 
   //utf8.hpp
-  auto characters(int offset = 0, int length = -1) const -> uint;
+  auto characters(int offset = 0, int length = -1) const -> unsigned;
 
   //utility.hpp
   static auto read(string_view filename) -> string;
-  static auto repeat(string_view pattern, uint times) -> string;
+  static auto repeat(string_view pattern, unsigned times) -> string;
   auto fill(char fill = ' ') -> type&;
-  auto hash() const -> uint;
-  auto remove(uint offset, uint length) -> type&;
+  auto hash() const -> unsigned;
+  auto remove(unsigned offset, unsigned length) -> type&;
   auto reverse() -> type&;
   auto size(int length, char fill = ' ') -> type&;
   auto slice(int offset = 0, int length = -1) const -> string;
@@ -268,8 +268,8 @@ template<> struct vector<string> : vector_base<string> {
   auto append() -> type&;
 
   auto isort() -> type&;
-  auto find(string_view source) const -> maybe<uint>;
-  auto ifind(string_view source) const -> maybe<uint>;
+  auto find(string_view source) const -> maybe<unsigned>;
+  auto ifind(string_view source) const -> maybe<unsigned>;
   auto match(string_view pattern) const -> vector<string>;
   auto merge(string_view separator = "") const -> string;
   auto strip() -> type&;

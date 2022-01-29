@@ -6,7 +6,7 @@
 namespace nall {
 
 struct inode {
-  enum class time : uint { create, modify, access };
+  enum class time : unsigned { create, modify, access };
 
   inode() = delete;
   inode(const inode&) = delete;

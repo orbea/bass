@@ -55,7 +55,7 @@ bool Bass::analyzeInstruction(Instruction& i) {
   }
 
   if(s.match("}") && blocks.right().type == "macro") {
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip;
     blocks.removeRight();
     i.statement = "} endmacro";
@@ -68,7 +68,7 @@ bool Bass::analyzeInstruction(Instruction& i) {
   }
 
   if(s.match("}") && blocks.right().type == "inline") {
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip;
     blocks.removeRight();
     i.statement = "} endinline";
@@ -94,21 +94,21 @@ bool Bass::analyzeInstruction(Instruction& i) {
 
   if(s.match("} else if ?* {")) {
     s.trim("} else if ", " {", 1L);
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip - 1;
     blocks.right().ip = ip - 1;
     return true;
   }
 
   if(s.match("} else {")) {
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip - 1;
     blocks.right().ip = ip - 1;
     return true;
   }
 
   if(s.match("}") && blocks.right().type == "if") {
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip - 1;
     blocks.removeRight();
     i.statement = "} endif";
@@ -122,7 +122,7 @@ bool Bass::analyzeInstruction(Instruction& i) {
   }
 
   if(s.match("}") && blocks.right().type == "while") {
-    uint rp = blocks.right().ip;
+    unsigned rp = blocks.right().ip;
     program[rp].ip = ip;
     blocks.removeRight();
     i.statement = "} endwhile";

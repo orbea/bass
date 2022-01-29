@@ -2,7 +2,7 @@
 
 namespace nall {
 
-template<uint bits, typename T> inline auto uclamp(T x) -> uint64_t {
+template<unsigned bits, typename T> inline auto uclamp(T x) -> uint64_t {
   enum : uint64_t { b = 1ull << (bits - 1), y = b * 2 - 1 };
   if constexpr(std::is_unsigned_v<T>) {
     return y + ((x - y) & -(x < y));  //min(x, y);
@@ -12,17 +12,17 @@ template<uint bits, typename T> inline auto uclamp(T x) -> uint64_t {
   }
 }
 
-template<uint bits> inline auto uclip(uint64_t x) -> uint64_t {
+template<unsigned bits> inline auto uclip(uint64_t x) -> uint64_t {
   enum : uint64_t { b = 1ull << (bits - 1), m = b * 2 - 1 };
   return (x & m);
 }
 
-template<uint bits> inline auto sclamp(int64_t x) -> int64_t {
+template<unsigned bits> inline auto sclamp(int64_t x) -> int64_t {
   enum : int64_t { b = 1ull << (bits - 1), m = b - 1 };
   return (x > m) ? m : (x < -b) ? -b : x;
 }
 
-template<uint bits> inline auto sclip(int64_t x) -> int64_t {
+template<unsigned bits> inline auto sclip(int64_t x) -> int64_t {
   enum : uint64_t { b = 1ull << (bits - 1), m = b * 2 - 1 };
   return ((x & m) ^ b) - b;
 }
@@ -62,16 +62,16 @@ namespace bit {
   }
 
   //count number of bits set in a byte
-  constexpr inline auto count(uint64_t x) -> uint {
-    uint count = 0;
+  constexpr inline auto count(uint64_t x) -> unsigned {
+    unsigned count = 0;
     while(x) x &= x - 1, count++;  //clear the least significant bit
     return count;
   }
 
   //return index of the first bit set (or zero of no bits are set)
   //first(0b1000) == 3
-  constexpr inline auto first(uint64_t x) -> uint {
-    uint first = 0;
+  constexpr inline auto first(uint64_t x) -> unsigned {
+    unsigned first = 0;
     while(x) { if(x & 1) break; x >>= 1; first++; }
     return first;
   }

@@ -9,31 +9,31 @@ struct Bass {
   void constant(const nall::string& name, const nall::string& value);
   bool assemble(bool strict = false);
 
-  enum class Phase : uint { Analyze, Query, Write };
-  enum class Endian : uint { LSB, MSB };
-  enum class Evaluation : uint { Default = 0, Strict = 1 };  //strict mode disallows forward-declaration of constants
+  enum class Phase : unsigned { Analyze, Query, Write };
+  enum class Endian : unsigned { LSB, MSB };
+  enum class Evaluation : unsigned { Default = 0, Strict = 1 };  //strict mode disallows forward-declaration of constants
 
   struct Instruction {
     nall::string statement;
-    uint ip;
+    unsigned ip;
 
-    uint fileNumber;
-    uint lineNumber;
-    uint blockNumber;
+    unsigned fileNumber;
+    unsigned lineNumber;
+    unsigned blockNumber;
   };
 
   struct Macro {
     Macro() {}
     Macro(const nall::string& name) : name(name) {}
-    Macro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
+    Macro(const nall::string& name, const nall::vector<nall::string>& parameters, unsigned ip, bool inlined) : name(name), parameters(parameters), ip(ip), inlined(inlined) {}
 
-    uint hash() const { return name.hash(); }
+    unsigned hash() const { return name.hash(); }
     bool operator==(const Macro& source) const { return name == source.name; }
     bool operator< (const Macro& source) const { return name <  source.name; }
 
     nall::string name;
     nall::vector<nall::string> parameters;
-    uint ip;
+    unsigned ip;
     bool inlined;
   };
 
@@ -42,7 +42,7 @@ struct Bass {
     Define(const nall::string& name) : name(name) {}
     Define(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value) : name(name), parameters(parameters), value(value) {}
 
-    uint hash() const { return name.hash(); }
+    unsigned hash() const { return name.hash(); }
     bool operator==(const Define& source) const { return name == source.name; }
     bool operator< (const Define& source) const { return name <  source.name; }
 
@@ -58,7 +58,7 @@ struct Bass {
     Variable(const nall::string& name) : name(name) {}
     Variable(const nall::string& name, int64_t value) : name(name), value(value) {}
 
-    uint hash() const { return name.hash(); }
+    unsigned hash() const { return name.hash(); }
     bool operator==(const Variable& source) const { return name == source.name; }
     bool operator< (const Variable& source) const { return name <  source.name; }
 
@@ -73,7 +73,7 @@ struct Bass {
     Array(const nall::string& name) : name(name) {}
     Array(const nall::string& name, nall::vector<int64_t> values) : name(name), values(values) {}
 
-    uint hash() const { return name.hash(); }
+    unsigned hash() const { return name.hash(); }
     bool operator==(const Array& source) const { return name == source.name; }
     bool operator< (const Array& source) const { return name <  source.name; }
 
@@ -82,14 +82,14 @@ struct Bass {
   };
 
   struct Frame {
-    enum class Level : uint {
+    enum class Level : unsigned {
       Inline,  //use deepest frame (eg for parameters)
       Active,  //use deepest non-inline frame
       Parent,  //use second-deepest non-inline frame
       Global,  //use root frame
     };
 
-    uint ip;
+    unsigned ip;
     bool inlined;
 
     nall::hashset<Macro> macros;
@@ -100,7 +100,7 @@ struct Bass {
   };
 
   struct Block {
-    uint ip;
+    unsigned ip;
     nall::string type;
   };
 
@@ -113,7 +113,7 @@ struct Bass {
   private:
     struct _EmitBytesOp {
       nall::string token;
-      uint dataLength;
+      unsigned dataLength;
     };
 
   public:
@@ -123,7 +123,7 @@ struct Bass {
     : EmitBytes ({ {"db ", 1}, {"dw ", 2}, {"dl ", 3}, {"dd ", 4}, {"dq ", 8}})
     {}
     
-    void add(nall::string token, uint dataLength) {
+    void add(nall::string token, unsigned dataLength) {
       EmitBytes.append( {token, dataLength} );
     }
   };
@@ -134,10 +134,10 @@ protected:
   bool writePhase() const { return phase == Phase::Write; }
 
   //core.cpp
-  uint pc() const;
-  void seek(uint offset);
-  void track(uint length);
-  void write(uint64_t data, uint length = 1);
+  unsigned pc() const;
+  void seek(unsigned offset);
+  void track(unsigned length);
+  void write(uint64_t data, unsigned length = 1);
 
   void printInstruction();
   void printInstructionStack();
@@ -170,7 +170,7 @@ protected:
   nall::string assembleString(const nall::string& parameters);
 
   //utility.cpp
-  void setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined, Frame::Level level);
+  void setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, unsigned ip, bool inlined, Frame::Level level);
   nall::maybe<Bass::Macro&> findMacro(const nall::string& name);
 
   void setDefine(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level);
@@ -213,12 +213,12 @@ protected:
   Phase phase;                    //phase of assembly
   Endian endian = Endian::LSB;    //used for multi-byte writes (d[bwldq], etc)
   Tracker tracker;                //used to track writes to detect overwrites
-  uint macroInvocationCounter;    //used for {#} support
-  uint ip = 0;                    //instruction pointer into program
-  uint origin = 0;                //file offset
+  unsigned macroInvocationCounter;    //used for {#} support
+  unsigned ip = 0;                    //instruction pointer into program
+  unsigned origin = 0;                //file offset
   int base = 0;                   //file offset to memory map displacement
-  uint lastLabelCounter = 1;      //- instance counter
-  uint nextLabelCounter = 1;      //+ instance counter
+  unsigned lastLabelCounter = 1;      //- instance counter
+  unsigned nextLabelCounter = 1;      //+ instance counter
   bool charactersUseMap = false;  //0 = '*' parses as ASCII; 1 = '*' uses stringTable[]
   bool strict = false;            //upgrade warnings to errors when true
   Directives directives;          //active directives

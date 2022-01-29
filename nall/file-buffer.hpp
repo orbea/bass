@@ -9,14 +9,14 @@ namespace nall {
 //this speeds up Windows substantially, without harming performance elsewhere much
 
 struct file_buffer {
-  struct mode { enum : uint { read, write, modify, append }; };
-  struct index { enum : uint { absolute, relative }; };
+  struct mode { enum : unsigned { read, write, modify, append }; };
+  struct index { enum : unsigned { absolute, relative }; };
 
   file_buffer(const file_buffer&) = delete;
   auto operator=(const file_buffer&) -> file_buffer& = delete;
 
   file_buffer() = default;
-  file_buffer(const string& filename, uint mode) { open(filename, mode); }
+  file_buffer(const string& filename, unsigned mode) { open(filename, mode); }
 
   file_buffer(file_buffer&& source) { operator=(std::move(source)); }
 
@@ -52,15 +52,15 @@ struct file_buffer {
     return buffer[fileOffset++ & buffer.size() - 1];
   }
 
-  template<typename T = uint64_t> auto readl(uint length = 1) -> T {
+  template<typename T = uint64_t> auto readl(unsigned length = 1) -> T {
     T data = 0;
-    for(uint n : range(length)) {
+    for(unsigned n : range(length)) {
       data |= (T)read() << n * 8;
     }
     return data;
   }
 
-  template<typename T = uint64_t> auto readm(uint length = 1) -> T {
+  template<typename T = uint64_t> auto readm(unsigned length = 1) -> T {
     T data = 0;
     while(length--) {
       data <<= 8;
@@ -69,7 +69,7 @@ struct file_buffer {
     return data;
   }
 
-  auto reads(uint length) -> string {
+  auto reads(unsigned length) -> string {
     string result;
     result.resize(length);
     for(auto& byte : result) byte = read();
@@ -89,15 +89,15 @@ struct file_buffer {
     if(fileOffset > fileSize) fileSize = fileOffset;
   }
 
-  template<typename T = uint64_t> auto writel(T data, uint length = 1) -> void {
+  template<typename T = uint64_t> auto writel(T data, unsigned length = 1) -> void {
     while(length--) {
       write(uint8_t(data));
       data >>= 8;
     }
   }
 
-  template<typename T = uint64_t> auto writem(T data, uint length = 1) -> void {
-    for(uint n : reverse(range(length))) {
+  template<typename T = uint64_t> auto writem(T data, unsigned length = 1) -> void {
+    for(unsigned n : reverse(range(length))) {
       write(uint8_t(data >> n * 8));
     }
   }
@@ -120,7 +120,7 @@ struct file_buffer {
     fflush(fileHandle);
   }
 
-  auto seek(int64_t offset, uint index_ = index::absolute) -> void {
+  auto seek(int64_t offset, unsigned index_ = index::absolute) -> void {
     if(!fileHandle) return;
     bufferFlush();
 
@@ -167,7 +167,7 @@ struct file_buffer {
     return fileOffset >= fileSize;
   }
 
-  auto open(const string& filename, uint mode_) -> bool {
+  auto open(const string& filename, unsigned mode_) -> bool {
     close();
 
     switch(fileMode = mode_) {
@@ -207,7 +207,7 @@ private:
   FILE* fileHandle = nullptr;
   uint64_t fileOffset = 0;
   uint64_t fileSize = 0;
-  uint fileMode = mode::read;
+  unsigned fileMode = mode::read;
 
   auto bufferSynchronize() -> void {
     if(!fileHandle) return;

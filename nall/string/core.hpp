@@ -46,7 +46,7 @@ inline auto string::reset() -> type& {
   return *this;
 }
 
-inline auto string::reserve(uint capacity) -> type& {
+inline auto string::reserve(unsigned capacity) -> type& {
   if(capacity <= _capacity) return *this;
   capacity = bit::round(capacity + 1) - 1;
   if(_capacity < SSO) {
@@ -62,7 +62,7 @@ inline auto string::reserve(uint capacity) -> type& {
   return *this;
 }
 
-inline auto string::resize(uint size) -> type& {
+inline auto string::resize(unsigned size) -> type& {
   reserve(size);
   get()[_size = size] = 0;
   return *this;
@@ -99,35 +99,35 @@ inline auto string::operator=(string&& source) -> type& {
 inline auto string::_allocate() -> void {
   char _temp[SSO];
   memory::copy(_temp, _text, SSO);
-  _data = memory::allocate<char>(_capacity + 1 + sizeof(uint));
+  _data = memory::allocate<char>(_capacity + 1 + sizeof(unsigned));
   memory::copy(_data, _temp, SSO);
-  _refs = (uint*)(_data + _capacity + 1);  //always aligned by 32 via reserve()
+  _refs = (unsigned*)(_data + _capacity + 1);  //always aligned by 32 via reserve()
   *_refs = 1;
 }
 
 //COW -> Unique
 inline auto string::_copy() -> void {
-  auto _temp = memory::allocate<char>(_capacity + 1 + sizeof(uint));
+  auto _temp = memory::allocate<char>(_capacity + 1 + sizeof(unsigned));
   memory::copy(_temp, _data, _size = std::min(_capacity, _size));
   _temp[_size] = 0;
   --*_refs;
   _data = _temp;
-  _refs = (uint*)(_data + _capacity + 1);
+  _refs = (unsigned*)(_data + _capacity + 1);
   *_refs = 1;
 }
 
 //COW -> Resize
 inline auto string::_resize() -> void {
-  _data = memory::resize<char>(_data, _capacity + 1 + sizeof(uint));
-  _refs = (uint*)(_data + _capacity + 1);
+  _data = memory::resize<char>(_data, _capacity + 1 + sizeof(unsigned));
+  _refs = (unsigned*)(_data + _capacity + 1);
   *_refs = 1;
 }
 
-inline auto string::operator[](uint position) const -> const char& {
+inline auto string::operator[](unsigned position) const -> const char& {
   return data()[position];
 }
 
-inline auto string::operator()(uint position, char fallback) const -> char {
+inline auto string::operator()(unsigned position, char fallback) const -> char {
   if(position >= size() + 1) return fallback;
   return data()[position];
 }
@@ -172,7 +172,7 @@ template<typename T> inline auto string::_append(const stringify<T>& source) -> 
   return *this;
 }
 
-inline auto string::length() const -> uint {
+inline auto string::length() const -> unsigned {
   return strlen(data());
 }
 

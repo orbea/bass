@@ -32,19 +32,19 @@ inline auto string::format(const nall::string_format& params) -> type& {
     };
     if(!isNumeric(&data[x + 1], &data[y - 1])) { x++; continue; }
 
-    uint index = toNatural(&data[x + 1]);
+    unsigned index = toNatural(&data[x + 1]);
     if(index >= params.size()) { x++; continue; }
 
-    uint sourceSize = y - x;
-    uint targetSize = params[index].size();
-    uint remaining = size - x;
+    unsigned sourceSize = y - x;
+    unsigned targetSize = params[index].size();
+    unsigned remaining = size - x;
 
     if(sourceSize > targetSize) {
-      uint difference = sourceSize - targetSize;
+      unsigned difference = sourceSize - targetSize;
       memory::move(&data[x], &data[x + difference], remaining - difference);
       size -= difference;
     } else if(targetSize > sourceSize) {
-      uint difference = targetSize - sourceSize;
+      unsigned difference = targetSize - sourceSize;
       data = (char*)realloc(data, size + difference);
       size += difference;
       memory::move(&data[x + difference], &data[x], remaining);
@@ -91,9 +91,9 @@ inline auto hex(uintmax value, long precision, char padchar) -> string {
   buffer.resize(sizeof(uintmax) * 2);
   char* p = buffer.get();
 
-  uint size = 0;
+  unsigned size = 0;
   do {
-    uint n = value & 15;
+    unsigned n = value & 15;
     p[size++] = n < 10 ? '0' + n : 'a' + n - 10;
     value >>= 4;
   } while(value);
@@ -108,7 +108,7 @@ inline auto octal(uintmax value, long precision, char padchar) -> string {
   buffer.resize(sizeof(uintmax) * 3);
   char* p = buffer.get();
 
-  uint size = 0;
+  unsigned size = 0;
   do {
     p[size++] = '0' + (value & 7);
     value >>= 3;
@@ -124,7 +124,7 @@ inline auto binary(uintmax value, long precision, char padchar) -> string {
   buffer.resize(sizeof(uintmax) * 8);
   char* p = buffer.get();
 
-  uint size = 0;
+  unsigned size = 0;
   do {
     p[size++] = '0' + (value & 1);
     value >>= 1;

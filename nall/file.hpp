@@ -3,12 +3,12 @@
 namespace nall {
 
 struct file : inode {
-  struct mode { enum : uint { read, write, modify, append }; };
-  struct index { enum : uint { absolute, relative }; };
+  struct mode { enum : unsigned { read, write, modify, append }; };
+  struct index { enum : unsigned { absolute, relative }; };
 
   file() = delete;
 
-  static auto open(const string& filename, uint mode) -> file_buffer {
+  static auto open(const string& filename, unsigned mode) -> file_buffer {
     return file_buffer{filename, mode};
   }
 

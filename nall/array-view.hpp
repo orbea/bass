@@ -35,11 +35,11 @@ template<typename T> struct array_view {
   auto operator-=(int distance) -> type& { _data -= distance; _size += distance; return *this; }
   auto operator+=(int distance) -> type& { _data += distance; _size -= distance; return *this; }
 
-  auto operator[](uint index) const -> const T& {
+  auto operator[](unsigned index) const -> const T& {
     return _data[index];
   }
 
-  auto operator()(uint index, const T& fallback = {}) const -> T {
+  auto operator()(unsigned index, const T& fallback = {}) const -> T {
     if(index >= _size) return fallback;
     return _data[index];
   }
@@ -47,11 +47,11 @@ template<typename T> struct array_view {
   template<typename U = T> auto data() const -> const U* { return (const U*)_data; }
   template<typename U = T> auto size() const -> uint64_t { return _size * sizeof(T) / sizeof(U); }
 
-  auto begin() const -> iterator_const<T> { return {_data, (uint)0}; }
-  auto end() const -> iterator_const<T> { return {_data, (uint)_size}; }
+  auto begin() const -> iterator_const<T> { return {_data, (unsigned)0}; }
+  auto end() const -> iterator_const<T> { return {_data, (unsigned)_size}; }
 
-  auto rbegin() const -> reverse_iterator_const<T> { return {_data, (uint)_size - 1}; }
-  auto rend() const -> reverse_iterator_const<T> { return {_data, (uint)-1}; }
+  auto rbegin() const -> reverse_iterator_const<T> { return {_data, (unsigned)_size - 1}; }
+  auto rend() const -> reverse_iterator_const<T> { return {_data, (unsigned)-1}; }
 
   auto read() -> T {
     auto value = operator[](0);
@@ -60,24 +60,24 @@ template<typename T> struct array_view {
     return value;
   }
 
-  auto view(uint offset, uint length) const -> type {
+  auto view(unsigned offset, unsigned length) const -> type {
     return {_data + offset, length};
   }
 
   //array_view<uint8_t> specializations
-  template<typename U> auto readl(U& value, uint size) -> U;
-  template<typename U> auto readm(U& value, uint size) -> U;
-  template<typename U> auto readvn(U& value, uint size) -> U;
-  template<typename U> auto readvi(U& value, uint size) -> U;
+  template<typename U> auto readl(U& value, unsigned size) -> U;
+  template<typename U> auto readm(U& value, unsigned size) -> U;
+  template<typename U> auto readvn(U& value, unsigned size) -> U;
+  template<typename U> auto readvi(U& value, unsigned size) -> U;
 
-  template<typename U> auto readl(U& value, uint offset, uint size) -> U { return view(offset, size).readl(value, size); }
+  template<typename U> auto readl(U& value, unsigned offset, unsigned size) -> U { return view(offset, size).readl(value, size); }
 
-  template<typename U = uint64_t> auto readl(uint size) -> U { U value; return readl(value, size); }
-  template<typename U = uint64_t> auto readm(uint size) -> U { U value; return readm(value, size); }
-  template<typename U = uint64_t> auto readvn(uint size) -> U { U value; return readvn(value, size); }
-  template<typename U =  int64_t> auto readvi(uint size) -> U { U value; return readvi(value, size); }
+  template<typename U = uint64_t> auto readl(unsigned size) -> U { U value; return readl(value, size); }
+  template<typename U = uint64_t> auto readm(unsigned size) -> U { U value; return readm(value, size); }
+  template<typename U = uint64_t> auto readvn(unsigned size) -> U { U value; return readvn(value, size); }
+  template<typename U =  int64_t> auto readvi(unsigned size) -> U { U value; return readvi(value, size); }
 
-  template<typename U = uint64_t> auto readl(uint offset, uint size) -> U { U value; return readl(value, offset, size); }
+  template<typename U = uint64_t> auto readl(unsigned offset, unsigned size) -> U { U value; return readl(value, offset, size); }
 
 protected:
   const T* _data;
@@ -86,21 +86,21 @@ protected:
 
 //array_view<uint8_t>
 
-template<> template<typename U> inline auto array_view<uint8_t>::readl(U& value, uint size) -> U {
+template<> template<typename U> inline auto array_view<uint8_t>::readl(U& value, unsigned size) -> U {
   value = 0;
-  for(uint byte : range(size)) value |= (U)read() << byte * 8;
+  for(unsigned byte : range(size)) value |= (U)read() << byte * 8;
   return value;
 }
 
-template<> template<typename U> inline auto array_view<uint8_t>::readm(U& value, uint size) -> U {
+template<> template<typename U> inline auto array_view<uint8_t>::readm(U& value, unsigned size) -> U {
   value = 0;
-  for(uint byte : reverse(range(size))) value |= (U)read() << byte * 8;
+  for(unsigned byte : reverse(range(size))) value |= (U)read() << byte * 8;
   return value;
 }
 
-template<> template<typename U> inline auto array_view<uint8_t>::readvn(U& value, uint size) -> U {
+template<> template<typename U> inline auto array_view<uint8_t>::readvn(U& value, unsigned size) -> U {
   value = 0;
-  uint shift = 1;
+  unsigned shift = 1;
   while(true) {
     auto byte = read();
     value += (byte & 0x7f) * shift;
@@ -111,7 +111,7 @@ template<> template<typename U> inline auto array_view<uint8_t>::readvn(U& value
   return value;
 }
 
-template<> template<typename U> inline auto array_view<uint8_t>::readvi(U& value, uint size) -> U {
+template<> template<typename U> inline auto array_view<uint8_t>::readvi(U& value, unsigned size) -> U {
   value = readvn<U>();
   bool negate = value & 1;
   value >>= 1;

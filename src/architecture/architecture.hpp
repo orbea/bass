@@ -11,7 +11,7 @@ struct Architecture {
     return false;
   }
 
-  uint pc() const {
+  unsigned pc() const {
     return self.pc();
   }
 
@@ -35,7 +35,7 @@ struct Architecture {
     return self.evaluate(expression, mode);
   }
 
-  void write(uint64_t data, uint length = 1) {
+  void write(uint64_t data, unsigned length = 1) {
     return self.write(data, length);
   }
 

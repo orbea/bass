@@ -40,7 +40,7 @@ template<typename T> auto vector<T>::foreach(const function<void (const T&)>& ca
   for(uint64_t n : range(size())) callback(_pool[n]);
 }
 
-template<typename T> auto vector<T>::foreach(const function<void (uint, const T&)>& callback) -> void {
+template<typename T> auto vector<T>::foreach(const function<void (unsigned, const T&)>& callback) -> void {
   for(uint64_t n : range(size())) callback(n, _pool[n]);
 }
 

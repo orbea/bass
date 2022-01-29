@@ -10,7 +10,7 @@ struct directory : inode {
   directory() = delete;
 
   static auto copy(const string& source, const string& target) -> bool;  //recursive
-  static auto create(const string& pathname, uint permissions = 0755) -> bool;  //recursive
+  static auto create(const string& pathname, unsigned permissions = 0755) -> bool;  //recursive
   static auto remove(const string& pathname) -> bool;  //recursive
   static auto exists(const string& pathname) -> bool;
 
@@ -158,7 +158,7 @@ inline auto directory::copy(const string& source, const string& target) -> bool 
 }
 
 #if defined(PLATFORM_WINDOWS)
-  inline auto directory::create(const string& pathname, uint permissions) -> bool {
+  inline auto directory::create(const string& pathname, unsigned permissions) -> bool {
     string path;
     auto list = string{pathname}.transform("\\", "/").trimRight("/").split("/");
     bool result = true;
@@ -268,7 +268,7 @@ inline auto directory::copy(const string& source, const string& target) -> bool 
     return false;
   }
 
-  inline auto directory::create(const string& pathname, uint permissions) -> bool {
+  inline auto directory::create(const string& pathname, unsigned permissions) -> bool {
     string path;
     auto list = string{pathname}.trimRight("/").split("/");
     bool result = true;

@@ -183,7 +183,7 @@ bool Bass::executeInstruction(Instruction& i) {
       if(!frames.right().inlined) scope.append(p(0));
 
       setDefine("#", {}, {"_", macroInvocationCounter++, "_"}, Frame::Level::Inline);
-      for(uint n : nall::range(parameters.size())) {
+      for(unsigned n : nall::range(parameters.size())) {
         auto p = macro().parameters(n).split(" ", 1L).strip();
         if(p.size() == 1) p.prepend("define");
 

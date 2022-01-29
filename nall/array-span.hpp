@@ -23,16 +23,16 @@ template<typename T> struct array_span : array_view<T> {
 
   operator T*() { return (T*)super::operator const T*(); }
 
-  auto operator[](uint index) -> T& { return (T&)super::operator[](index); }
+  auto operator[](unsigned index) -> T& { return (T&)super::operator[](index); }
 
   template<typename U = T> auto data() -> U* { return (U*)super::_data; }
   template<typename U = T> auto data() const -> const U* { return (const U*)super::_data; }
 
-  auto begin() -> iterator<T> { return {(T*)super::_data, (uint)0}; }
-  auto end() -> iterator<T> { return {(T*)super::_data, (uint)super::_size}; }
+  auto begin() -> iterator<T> { return {(T*)super::_data, (unsigned)0}; }
+  auto end() -> iterator<T> { return {(T*)super::_data, (unsigned)super::_size}; }
 
-  auto rbegin() -> reverse_iterator<T> { return {(T*)super::_data, (uint)super::_size - 1}; }
-  auto rend() -> reverse_iterator<T> { return {(T*)super::_data, (uint)-1}; }
+  auto rbegin() -> reverse_iterator<T> { return {(T*)super::_data, (unsigned)super::_size - 1}; }
+  auto rend() -> reverse_iterator<T> { return {(T*)super::_data, (unsigned)-1}; }
 
   auto write(T value) -> void {
     operator[](0) = value;
@@ -40,15 +40,15 @@ template<typename T> struct array_span : array_view<T> {
     super::_size--;
   }
 
-  auto span(uint offset, uint length) const -> type {
+  auto span(unsigned offset, unsigned length) const -> type {
     return {super::_data + offset, length};
   }
 
   //array_span<uint8_t> specializations
-  template<typename U> auto writel(U value, uint size) -> void;
-  template<typename U> auto writem(U value, uint size) -> void;
-  template<typename U> auto writevn(U value, uint size) -> void;
-  template<typename U> auto writevi(U value, uint size) -> void;
+  template<typename U> auto writel(U value, unsigned size) -> void;
+  template<typename U> auto writem(U value, unsigned size) -> void;
+  template<typename U> auto writevn(U value, unsigned size) -> void;
+  template<typename U> auto writevi(U value, unsigned size) -> void;
 };
 
 //array_span<uint8_t>
@@ -59,15 +59,15 @@ template<> inline auto array_span<uint8_t>::write(uint8_t value) -> void {
   _size--;
 }
 
-template<> template<typename U> inline auto array_span<uint8_t>::writel(U value, uint size) -> void {
-  for(uint byte : range(size)) write(value >> byte * 8);
+template<> template<typename U> inline auto array_span<uint8_t>::writel(U value, unsigned size) -> void {
+  for(unsigned byte : range(size)) write(value >> byte * 8);
 }
 
-template<> template<typename U> inline auto array_span<uint8_t>::writem(U value, uint size) -> void {
-  for(uint byte : reverse(range(size))) write(value >> byte * 8);
+template<> template<typename U> inline auto array_span<uint8_t>::writem(U value, unsigned size) -> void {
+  for(unsigned byte : reverse(range(size))) write(value >> byte * 8);
 }
 
-template<> template<typename U> inline auto array_span<uint8_t>::writevn(U value, uint size) -> void {
+template<> template<typename U> inline auto array_span<uint8_t>::writevn(U value, unsigned size) -> void {
   while(true) {
     auto byte = value & 0x7f;
     value >>= 7;
@@ -77,7 +77,7 @@ template<> template<typename U> inline auto array_span<uint8_t>::writevn(U value
   }
 }
 
-template<> template<typename U> inline auto array_span<uint8_t>::writevi(U value, uint size) -> void {
+template<> template<typename U> inline auto array_span<uint8_t>::writevi(U value, unsigned size) -> void {
   bool negate = value < 0;
   if(negate) value = ~value;
   value = value << 1 | negate;

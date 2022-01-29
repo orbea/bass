@@ -15,10 +15,6 @@
 #include <pwd.h>
 #include <grp.h>
 
-namespace nall {
-  using uint = unsigned;
-}
-
 //note: (u)intmax actually mean it: use as many bits as is possible
 #if defined(__SIZEOF_INT128__)
   using  int128_t =   signed __int128;

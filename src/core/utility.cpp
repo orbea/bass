@@ -1,4 +1,4 @@
-void Bass::setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined, Frame::Level level) {
+void Bass::setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, unsigned ip, bool inlined, Frame::Level level) {
   if(!validate(name)) error("invalid macro identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -282,11 +282,11 @@ nall::string Bass::filepath() {
 //split argument list by commas, being aware of parenthesis depth and quotes
 nall::vector<nall::string> Bass::split(const nall::string& s) {
   nall::vector<nall::string> result;
-  uint offset = 0;
+  unsigned offset = 0;
   char quoted = 0;
-  uint depth = 0;
+  unsigned depth = 0;
   bool escaped = 0;
-  for(uint n : nall::range(s.size())) {
+  for(unsigned n : nall::range(s.size())) {
     if(s[n] == '\\' && quoted) {
       escaped = 1;
       continue;
@@ -315,9 +315,9 @@ nall::vector<nall::string> Bass::split(const nall::string& s) {
 
 //reduce all duplicate whitespace segments (eg "  ") to single whitespace (" ")
 void Bass::strip(nall::string& s) {
-  uint offset = 0;
+  unsigned offset = 0;
   char quoted = 0;
-  for(uint n : nall::range(s.size())) {
+  for(unsigned n : nall::range(s.size())) {
     if(!quoted) {
       if(s[n] == '"' || s[n] == '\'') quoted = s[n];
     } else if(quoted == s[n]) {
@@ -331,7 +331,7 @@ void Bass::strip(nall::string& s) {
 
 //returns true for valid name identifiers
 bool Bass::validate(const nall::string& s) {
-  for(uint n : nall::range(s.size())) {
+  for(unsigned n : nall::range(s.size())) {
     char c = s[n];
     if(c == '_' || c == '#') continue;
     if(c >= 'A' && c <= 'Z') continue;

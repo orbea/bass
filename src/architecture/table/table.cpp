@@ -13,7 +13,7 @@ bool Table::assemble(const nall::string& statement) {
     return true;
   }
 
-  uint pc = Architecture::pc();
+  unsigned pc = Architecture::pc();
 
   for(auto& opcode : table) {
     if(!tokenize(s, opcode.pattern)) continue;
@@ -26,7 +26,7 @@ bool Table::assemble(const nall::string& statement) {
     for(auto& format : opcode.format) {
       if(format.type == Format::Type::Absolute) {
         if(format.match != Format::Match::Weak) {
-          uint bits = bitLength(args[format.argument]);
+          unsigned bits = bitLength(args[format.argument]);
           if(bits != opcode.number[format.argument].bits) {
             if(format.match == Format::Match::Exact || bits != 0) {
               mismatch = true;
@@ -46,14 +46,14 @@ bool Table::assemble(const nall::string& statement) {
         }
 
         case Format::Type::Absolute: {
-          uint data = evaluate(args[format.argument]);
+          unsigned data = evaluate(args[format.argument]);
           writeBits(data, opcode.number[format.argument].bits);
           break;
         }
 
         case Format::Type::Relative: {
           int data = evaluate(args[format.argument]) - (pc + format.displacement);
-          uint bits = opcode.number[format.argument].bits;
+          unsigned bits = opcode.number[format.argument].bits;
           int min = -(1 << (bits - 1)), max = +(1 << (bits - 1)) - 1;
           if(data < min || data > max) {
             error("branch out of bounds: ", data);
@@ -63,8 +63,8 @@ bool Table::assemble(const nall::string& statement) {
         }
 
         case Format::Type::Repeat: {
-          uint data = evaluate(args[format.argument]);
-          for(uint n : nall::range(data)) {
+          unsigned data = evaluate(args[format.argument]);
+          for(unsigned n : nall::range(data)) {
             writeBits(format.data, opcode.number[format.argument].bits);
           }
           break;
@@ -117,9 +117,9 @@ bool Table::assemble(const nall::string& statement) {
   return false;
 }
 
-uint Table::bitLength(nall::string& text) const {
-  auto binLength = [&](const char* p) -> uint {
-    uint length = 0;
+unsigned Table::bitLength(nall::string& text) const {
+  auto binLength = [&](const char* p) -> unsigned {
+    unsigned length = 0;
     while(*p) {
       if(*p == '0' || *p == '1') { p++; length += 1; continue; }
       return 0;
@@ -127,8 +127,8 @@ uint Table::bitLength(nall::string& text) const {
     return length;
   };
 
-  auto hexLength = [&](const char* p) -> uint {
-    uint length = 0;
+  auto hexLength = [&](const char* p) -> unsigned {
+    unsigned length = 0;
     while(*p) {
       if(*p >= '0' && *p <= '9') { p++; length += 4; continue; }
       if(*p >= 'a' && *p <= 'f') { p++; length += 4; continue; }
@@ -151,7 +151,7 @@ uint Table::bitLength(nall::string& text) const {
   return 0;
 }
 
-void Table::writeBits(uint64_t data, uint length) {
+void Table::writeBits(uint64_t data, unsigned length) {
   nall::function<uint64_t(unsigned)> setBits = [&](unsigned n) -> uint64_t {
     // Create a bit mask with the n least significant bits set
     return (1 << n) - 1;
@@ -212,7 +212,7 @@ void Table::parseDirective(nall::string& line) {
   auto& key = items[0];
   key.append(" ");
   
-  uint value = atoi(items[1]);
+  unsigned value = atoi(items[1]);
   
   for(auto& d : directives().EmitBytes) {
     if(key.equals(d.token)) {
@@ -226,10 +226,10 @@ void Table::parseDirective(nall::string& line) {
 
 
 void Table::assembleTableLHS(Opcode& opcode, const nall::string& text) {
-  uint offset = 0;
+  unsigned offset = 0;
 
   auto length = [&] {
-    uint length = 0;
+    unsigned length = 0;
     while(text[offset + length]) {
       char n = text[offset + length];
       if(n == '*') break;
@@ -239,12 +239,12 @@ void Table::assembleTableLHS(Opcode& opcode, const nall::string& text) {
   };
 
   while(text[offset]) {
-    uint size = length();
+    unsigned size = length();
     opcode.prefix.append({slice(text, offset, size), size});
     offset += size;
 
     if(text[offset] != '*') continue;
-    uint bits = 10 * (text[offset + 1] - '0');
+    unsigned bits = 10 * (text[offset + 1] - '0');
     bits += text[offset + 2] - '0';
     opcode.number.append({bits});
     offset += 3;
@@ -258,7 +258,7 @@ void Table::assembleTableLHS(Opcode& opcode, const nall::string& text) {
 }
 
 void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
-  uint offset = 0;
+  unsigned offset = 0;
 
   auto list = text.split(" ");
   for(auto& item : list) {

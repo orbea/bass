@@ -3,7 +3,7 @@
 namespace nall {
 
 template<bool Insensitive>
-inline auto string::_compare(const char* target, uint capacity, const char* source, uint size) -> int {
+inline auto string::_compare(const char* target, unsigned capacity, const char* source, unsigned size) -> int {
   if(Insensitive) return memory::icompare(target, capacity, source, size);
   return memory::compare(target, capacity, source, size);
 }
