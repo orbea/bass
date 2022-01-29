@@ -1,4 +1,4 @@
-auto Bass::setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined, Frame::Level level) -> void {
+void Bass::setMacro(const nall::string& name, const nall::vector<nall::string>& parameters, uint ip, bool inlined, Frame::Level level) {
   if(!validate(name)) error("invalid macro identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -23,7 +23,7 @@ auto Bass::setMacro(const nall::string& name, const nall::vector<nall::string>& 
   }
 }
 
-auto Bass::findMacro(const nall::string& name) -> nall::maybe<Macro&> {
+nall::maybe<Bass::Macro&> Bass::findMacro(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& macros = frames[n].macros;
     auto s = scope;
@@ -40,7 +40,7 @@ auto Bass::findMacro(const nall::string& name) -> nall::maybe<Macro&> {
   return nall::nothing;
 }
 
-auto Bass::setDefine(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) -> void {
+void Bass::setDefine(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) {
   if(!validate(name)) error("invalid define identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -64,7 +64,7 @@ auto Bass::setDefine(const nall::string& name, const nall::vector<nall::string>&
   }
 }
 
-auto Bass::findDefine(const nall::string& name) -> nall::maybe<Define&> {
+nall::maybe<Bass::Define&> Bass::findDefine(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& defines = frames[n].defines;
     auto s = scope;
@@ -81,7 +81,7 @@ auto Bass::findDefine(const nall::string& name) -> nall::maybe<Define&> {
   return nall::nothing;
 }
 
-auto Bass::setExpression(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) -> void {
+void Bass::setExpression(const nall::string& name, const nall::vector<nall::string>& parameters, const nall::string& value, Frame::Level level) {
   if(!validate(name)) error("invalid expression identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
   if(parameters) scopedName.append("#", parameters.size());
@@ -105,7 +105,7 @@ auto Bass::setExpression(const nall::string& name, const nall::vector<nall::stri
   }
 }
 
-auto Bass::findExpression(const nall::string& name) -> nall::maybe<Expression&> {
+nall::maybe<Bass::Expression&> Bass::findExpression(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& expressions = frames[n].expressions;
     auto s = scope;
@@ -122,7 +122,7 @@ auto Bass::findExpression(const nall::string& name) -> nall::maybe<Expression&> 
   return nall::nothing;
 }
 
-auto Bass::setVariable(const nall::string& name, int64_t value, Frame::Level level) -> void {
+void Bass::setVariable(const nall::string& name, int64_t value, Frame::Level level) {
   if(!validate(name)) error("invalid variable identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
 
@@ -144,7 +144,7 @@ auto Bass::setVariable(const nall::string& name, int64_t value, Frame::Level lev
   }
 }
 
-auto Bass::findVariable(const nall::string& name) -> nall::maybe<Variable&> {
+nall::maybe<Bass::Variable&> Bass::findVariable(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& variables = frames[n].variables;
     auto s = scope;
@@ -161,7 +161,7 @@ auto Bass::findVariable(const nall::string& name) -> nall::maybe<Variable&> {
   return nall::nothing;
 }
 
-auto Bass::setConstant(const nall::string& name, int64_t value) -> void {
+void Bass::setConstant(const nall::string& name, int64_t value) {
   if(!validate(name)) error("invalid constant identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
 
@@ -173,7 +173,7 @@ auto Bass::setConstant(const nall::string& name, int64_t value) -> void {
   }
 }
 
-auto Bass::findConstant(const nall::string& name) -> nall::maybe<Constant&> {
+nall::maybe<Bass::Constant&> Bass::findConstant(const nall::string& name) {
   auto s = scope;
   while(true) {
     nall::string scopedName = {s.merge("."), s ? "." : "", name};
@@ -187,7 +187,7 @@ auto Bass::findConstant(const nall::string& name) -> nall::maybe<Constant&> {
   return nall::nothing;
 }
 
-auto Bass::setArray(const nall::string& name, const nall::vector<int64_t>& values, Frame::Level level) -> void {
+void Bass::setArray(const nall::string& name, const nall::vector<int64_t>& values, Frame::Level level) {
   if(!validate(name)) error("invalid array identifier: ", name);
   nall::string scopedName = {scope.merge("."), scope ? "." : "", name};
 
@@ -209,7 +209,7 @@ auto Bass::setArray(const nall::string& name, const nall::vector<int64_t>& value
   }
 }
 
-auto Bass::findArray(const nall::string& name) -> nall::maybe<Array&> {
+nall::maybe<Bass::Array&> Bass::findArray(const nall::string& name) {
   for(int n : nall::reverse(nall::range(frames.size()))) {
     auto& arrays = frames[n].arrays;
     auto s = scope;
@@ -226,7 +226,7 @@ auto Bass::findArray(const nall::string& name) -> nall::maybe<Array&> {
   return nall::nothing;
 }
 
-auto Bass::evaluateDefines(nall::string& s) -> void {
+void Bass::evaluateDefines(nall::string& s) {
   for(int x = s.size() - 1, y = -1; x >= 0; x--) {
     if(s[x] == '}') y = x;
     if(s[x] == '{' && y > x) {
@@ -268,19 +268,19 @@ auto Bass::evaluateDefines(nall::string& s) -> void {
   }
 }
 
-auto Bass::readArchitecture(const nall::string& s) -> nall::string {
+nall::string Bass::readArchitecture(const nall::string& s) {
   nall::string location{nall::Path::userData(), "bass/architectures/", s, ".arch"};
   if(!nall::file::exists(location)) location = {nall::Path::program(), "architectures/", s, ".arch"};
   if(!nall::file::exists(location)) error("unknown architecture: ", s);
   return nall::string::read(location);
 }
 
-auto Bass::filepath() -> nall::string {
+nall::string Bass::filepath() {
   return nall::Location::path(sourceFilenames[activeInstruction->fileNumber]);
 }
 
 //split argument list by commas, being aware of parenthesis depth and quotes
-auto Bass::split(const nall::string& s) -> nall::vector<nall::string> {
+nall::vector<nall::string> Bass::split(const nall::string& s) {
   nall::vector<nall::string> result;
   uint offset = 0;
   char quoted = 0;
@@ -314,7 +314,7 @@ auto Bass::split(const nall::string& s) -> nall::vector<nall::string> {
 }
 
 //reduce all duplicate whitespace segments (eg "  ") to single whitespace (" ")
-auto Bass::strip(nall::string& s) -> void {
+void Bass::strip(nall::string& s) {
   uint offset = 0;
   char quoted = 0;
   for(uint n : nall::range(s.size())) {
@@ -330,7 +330,7 @@ auto Bass::strip(nall::string& s) -> void {
 }
 
 //returns true for valid name identifiers
-auto Bass::validate(const nall::string& s) -> bool {
+bool Bass::validate(const nall::string& s) {
   for(uint n : nall::range(s.size())) {
     char c = s[n];
     if(c == '_' || c == '#') continue;
@@ -343,7 +343,7 @@ auto Bass::validate(const nall::string& s) -> bool {
   return true;
 }
 
-auto Bass::text(nall::string s) -> nall::string {
+nall::string Bass::text(nall::string s) {
   if(!s.match("\"*\"")) warning("string value is unquoted: ", s);
 
   auto parts = s.qsplit("~").strip();
@@ -356,7 +356,7 @@ auto Bass::text(nall::string s) -> nall::string {
   return parts.merge();
 }
 
-auto Bass::character(const nall::string& s) -> int64_t {
+int64_t Bass::character(const nall::string& s) {
   nall::maybe<uint8_t> result;
   if(s[0] == '\'') {
     if(0);

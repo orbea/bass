@@ -9,7 +9,7 @@
 #include <nall/arguments.hpp>
 #include <nall/main.hpp>
 
-auto nall::main(Arguments arguments) -> void {
+void nall::main(Arguments arguments) {
   if(!arguments) {
     print(stderr, "bass v18\n");
     print(stderr, "\n");

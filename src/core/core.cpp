@@ -4,7 +4,7 @@
 #include "assemble.cpp"
 #include "utility.cpp"
 
-auto Bass::target(const nall::string& filename, bool create) -> bool {
+bool Bass::target(const nall::string& filename, bool create) {
   if(targetFile) targetFile.close();
   if(!filename) return true;
 
@@ -20,7 +20,7 @@ auto Bass::target(const nall::string& filename, bool create) -> bool {
   return true;
 }
 
-auto Bass::source(const nall::string& filename) -> bool {
+bool Bass::source(const nall::string& filename) {
   if(!nall::file::exists(filename)) {
     print(stderr, "warning: source file not found: ", filename, "\n");
     return false;
@@ -63,18 +63,18 @@ auto Bass::source(const nall::string& filename) -> bool {
   return true;
 }
 
-auto Bass::define(const nall::string& name, const nall::string& value) -> void {
+void Bass::define(const nall::string& name, const nall::string& value) {
   defines.insert({name, {}, value});
 }
 
-auto Bass::constant(const nall::string& name, const nall::string& value) -> void {
+void Bass::constant(const nall::string& name, const nall::string& value) {
   try {
     constants.insert({name, evaluate(value, Evaluation::Strict)});
   } catch(...) {
   }
 }
 
-auto Bass::assemble(bool strict) -> bool {
+bool Bass::assemble(bool strict) {
   this->strict = strict;
 
   try {
@@ -97,16 +97,16 @@ auto Bass::assemble(bool strict) -> bool {
 
 //internal
 
-auto Bass::pc() const -> uint {
+uint Bass::pc() const {
   return origin + base;
 }
 
-auto Bass::seek(uint offset) -> void {
+void Bass::seek(uint offset) {
   if(!targetFile) return;
   if(writePhase()) targetFile.seek(offset);
 }
 
-auto Bass::track(uint length) -> void {
+void Bass::track(uint length) {
   if(!tracker.enable) return;
   uint64_t address = targetFile.offset();
   for(auto n : nall::range(length)) {
@@ -117,7 +117,7 @@ auto Bass::track(uint length) -> void {
   }
 }
 
-auto Bass::write(uint64_t data, uint length) -> void {
+void Bass::write(uint64_t data, uint length) {
   if(writePhase()) {
     if(targetFile) {
       track(length);
@@ -131,20 +131,20 @@ auto Bass::write(uint64_t data, uint length) -> void {
   origin += length;
 }
 
-auto Bass::printInstruction() -> void {
+void Bass::printInstruction() {
   if(activeInstruction) {
     auto& i = *activeInstruction;
     print(stderr, sourceFilenames[i.fileNumber], ":", i.lineNumber, ":", i.blockNumber, ": ", i.statement, "\n");
   }
 }
 
-template<typename... P> auto Bass::notice(P&&... p) -> void {
+template<typename... P> void Bass::notice(P&&... p) {
   nall::string s{nall::forward<P>(p)...};
   print(stderr, nall::terminal::color::gray("notice: "), s, "\n");
   printInstruction();
 }
 
-template<typename... P> auto Bass::warning(P&&... p) -> void {
+template<typename... P> void Bass::warning(P&&... p) {
   nall::string s{nall::forward<P>(p)...};
   print(stderr, nall::terminal::color::yellow("warning: "), s, "\n");
   if(!strict) {
@@ -157,7 +157,7 @@ template<typename... P> auto Bass::warning(P&&... p) -> void {
   throw BassWarning();
 }
 
-template<typename... P> auto Bass::error(P&&... p) -> void {
+template<typename... P> void Bass::error(P&&... p) {
   nall::string s{nall::forward<P>(p)...};
   print(stderr, nall::terminal::color::red("error: "), s, "\n");
   printInstructionStack();
@@ -166,7 +166,7 @@ template<typename... P> auto Bass::error(P&&... p) -> void {
   throw BassError();
 }
 
-auto Bass::printInstructionStack() -> void {
+void Bass::printInstructionStack() {
   printInstruction();
 
   for(const auto& frame : nall::reverse(frames)) {

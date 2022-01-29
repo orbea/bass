@@ -1,4 +1,4 @@
-auto Bass::analyze() -> bool {
+bool Bass::analyze() {
   blocks.reset();
   ip = 0;
 
@@ -10,7 +10,7 @@ auto Bass::analyze() -> bool {
   return true;
 }
 
-auto Bass::analyzeInstruction(Instruction& i) -> bool {
+bool Bass::analyzeInstruction(Instruction& i) {
   nall::string s = i.statement;
 
   if(s.match("}") && !blocks) error("} without matching {\n", i.lineNumber, ": ", i.statement);

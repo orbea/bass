@@ -7,49 +7,47 @@ struct Architecture {
   virtual ~Architecture() {
   }
 
-  virtual auto assemble(const nall::string& statement) -> bool {
+  virtual bool assemble(const nall::string& statement) {
     return false;
   }
 
-  //
-
-  auto pc() const -> uint {
+  uint pc() const {
     return self.pc();
   }
 
-  auto endian() const -> Bass::Endian {
+  Bass::Endian endian() const {
     return self.endian;
   }
 
-  auto setEndian(Bass::Endian endian) -> void {
+  void setEndian(Bass::Endian endian) {
     self.endian = endian;
   }
 
-  auto directives() -> Bass::Directives& {
+  Bass::Directives& directives() {
     return self.directives;
   }
 
-  auto readArchitecture(const nall::string& s) -> nall::string {
+  nall::string readArchitecture(const nall::string& s) {
     return self.readArchitecture(s);
   }
 
-  auto evaluate(const nall::string& expression, Bass::Evaluation mode = Bass::Evaluation::Default) -> int64_t {
+  int64_t evaluate(const nall::string& expression, Bass::Evaluation mode = Bass::Evaluation::Default) {
     return self.evaluate(expression, mode);
   }
 
-  auto write(uint64_t data, uint length = 1) -> void {
+  void write(uint64_t data, uint length = 1) {
     return self.write(data, length);
   }
 
-  template<typename... P> auto notice(P&&... p) -> void {
+  template<typename... P> void notice(P&&... p) {
     return self.notice(nall::forward<P>(p)...);
   }
 
-  template<typename... P> auto warning(P&&... p) -> void {
+  template<typename... P> void warning(P&&... p) {
     return self.warning(nall::forward<P>(p)...);
   }
 
-  template<typename... P> auto error(P&&... p) -> void {
+  template<typename... P> void error(P&&... p) {
     return self.error(nall::forward<P>(p)...);
   }
 

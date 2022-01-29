@@ -4,7 +4,7 @@ Table::Table(Bass& self, const nall::string& table) : Architecture(self) {
   parseTable(table);
 }
 
-auto Table::assemble(const nall::string& statement) -> bool {
+bool Table::assemble(const nall::string& statement) {
   nall::string s = statement;
 
   if(s.match("instrument \"*\"")) {
@@ -117,7 +117,7 @@ auto Table::assemble(const nall::string& statement) -> bool {
   return false;
 }
 
-auto Table::bitLength(nall::string& text) const -> uint {
+uint Table::bitLength(nall::string& text) const {
   auto binLength = [&](const char* p) -> uint {
     uint length = 0;
     while(*p) {
@@ -151,7 +151,7 @@ auto Table::bitLength(nall::string& text) const -> uint {
   return 0;
 }
 
-auto Table::writeBits(uint64_t data, uint length) -> void {
+void Table::writeBits(uint64_t data, uint length) {
   nall::function<uint64_t(unsigned)> setBits = [&](unsigned n) -> uint64_t {
     // Create a bit mask with the n least significant bits set
     return (1 << n) - 1;
@@ -167,7 +167,7 @@ auto Table::writeBits(uint64_t data, uint length) -> void {
   }  
 }
 
-auto Table::parseTable(const nall::string& text) -> bool {
+bool Table::parseTable(const nall::string& text) {
   auto lines = text.split("\n");
   for(auto& line : lines) {
     if(auto position = line.find("//")) line.resize(position());  //remove comments
@@ -200,7 +200,7 @@ auto Table::parseTable(const nall::string& text) -> bool {
 }
 
 // #directive <name> <byte_size>
-auto Table::parseDirective(nall::string& line) -> void {
+void Table::parseDirective(nall::string& line) {
   auto work = line.strip();
   work.trimLeft("#directive ", 1L);
   
@@ -225,7 +225,7 @@ auto Table::parseDirective(nall::string& line) -> void {
 }
 
 
-auto Table::assembleTableLHS(Opcode& opcode, const nall::string& text) -> void {
+void Table::assembleTableLHS(Opcode& opcode, const nall::string& text) {
   uint offset = 0;
 
   auto length = [&] {
@@ -257,7 +257,7 @@ auto Table::assembleTableLHS(Opcode& opcode, const nall::string& text) -> void {
   if(opcode.number.size() == opcode.prefix.size()) opcode.pattern.append("*");
 }
 
-auto Table::assembleTableRHS(Opcode& opcode, const nall::string& text) -> void {
+void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
   uint offset = 0;
 
   auto list = text.split(" ");
@@ -356,7 +356,7 @@ auto Table::assembleTableRHS(Opcode& opcode, const nall::string& text) -> void {
   }
 }
 
-auto Table::swapEndian(uint64_t data, unsigned bits) -> uint64_t {
+uint64_t Table::swapEndian(uint64_t data, unsigned bits) {
   int t_data = 0;
   switch((bits - 1) / 8) {
     case 3: { // 4 bytes

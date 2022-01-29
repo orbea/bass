@@ -2,7 +2,7 @@
 
 struct Table : Architecture {
   Table(Bass& self, const nall::string& table);
-  auto assemble(const nall::string& statement) -> bool override;
+  bool assemble(const nall::string& statement) override;
 
 private:
   struct Prefix {
@@ -38,13 +38,13 @@ private:
     nall::string pattern;
   };
 
-  auto bitLength(nall::string& text) const -> uint;
-  auto writeBits(uint64_t data, uint bits) -> void;
-  auto parseTable(const nall::string& text) -> bool;
-  auto parseDirective(nall::string& line) -> void;
-  auto assembleTableLHS(Opcode& opcode, const nall::string& text) -> void;
-  auto assembleTableRHS(Opcode& opcode, const nall::string& text) -> void;
-  auto swapEndian(uint64_t data, unsigned bits) -> uint64_t;
+  uint bitLength(nall::string& text) const;
+  void writeBits(uint64_t data, uint bits);
+  bool parseTable(const nall::string& text);
+  void parseDirective(nall::string& line);
+  void assembleTableLHS(Opcode& opcode, const nall::string& text);
+  void assembleTableRHS(Opcode& opcode, const nall::string& text);
+  uint64_t swapEndian(uint64_t data, unsigned bits);
 
   nall::vector<Opcode> table;
   uint64_t bitval, bitpos;

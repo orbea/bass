@@ -1,4 +1,4 @@
-auto Bass::initialize() -> void {
+void Bass::initialize() {
   queue.reset();
   scope.reset();
   for(uint n : nall::range(256)) stringTable[n] = n;
@@ -9,7 +9,7 @@ auto Bass::initialize() -> void {
   nextLabelCounter = 1;
 }
 
-auto Bass::assemble(const nall::string& statement) -> bool {
+bool Bass::assemble(const nall::string& statement) {
   nall::string s = statement;
 
   if(s.match("block {")) return true;
@@ -328,7 +328,7 @@ auto Bass::assemble(const nall::string& statement) -> bool {
   return result;
 }
 
-auto Bass::assembleString(const nall::string& parameters) -> nall::string {
+nall::string Bass::assembleString(const nall::string& parameters) {
   nall::string result;
   auto p = split(parameters);
   for(auto& t : p) {

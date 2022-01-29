@@ -1,4 +1,4 @@
-auto Bass::execute() -> bool {
+bool Bass::execute() {
   frames.reset();
   conditionals.reset();
   ip = 0;
@@ -20,7 +20,7 @@ auto Bass::execute() -> bool {
   return true;
 }
 
-auto Bass::executeInstruction(Instruction& i) -> bool {
+bool Bass::executeInstruction(Instruction& i) {
   activeInstruction = &i;
   nall::string s = i.statement;
   evaluateDefines(s);

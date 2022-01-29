@@ -1,4 +1,4 @@
-auto Bass::evaluate(const nall::string& expression, Evaluation mode) -> int64_t {
+int64_t Bass::evaluate(const nall::string& expression, Evaluation mode) {
   nall::maybe<nall::string> name;
   if(expression == "--") name = {"lastLabel#", lastLabelCounter - 2};
   if(expression == "-" ) name = {"lastLabel#", lastLabelCounter - 1};
@@ -21,7 +21,7 @@ auto Bass::evaluate(const nall::string& expression, Evaluation mode) -> int64_t 
   return evaluate(node, mode);
 }
 
-auto Bass::evaluate(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+int64_t Bass::evaluate(nall::Eval::Node* node, Evaluation mode) {
   #define p(n) evaluate(node->link[n], mode)
 
   switch(node->type) {
@@ -61,13 +61,13 @@ auto Bass::evaluate(nall::Eval::Node* node, Evaluation mode) -> int64_t {
 }
 
 //calculates the number of parameters to a function without evaluating its arguments yet
-auto Bass::quantifyParameters(nall::Eval::Node* node) -> int64_t {
+int64_t Bass::quantifyParameters(nall::Eval::Node* node) {
   if(node->type == nall::Eval::Node::Type::Null) return 0;
   if(node->type == nall::Eval::Node::Type::Separator) return node->link.size();
   return 1;  //any other type here signifies one argument
 }
 
-auto Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) -> nall::vector<int64_t> {
+nall::vector<int64_t> Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) {
   nall::vector<int64_t> result;
   if(node->type == nall::Eval::Node::Type::Null) return result;
   if(node->type != nall::Eval::Node::Type::Separator) { result.append(evaluate(node, mode)); return result; }
@@ -75,7 +75,7 @@ auto Bass::evaluateParameters(nall::Eval::Node* node, Evaluation mode) -> nall::
   return result;
 }
 
-auto Bass::evaluateExpression(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+int64_t Bass::evaluateExpression(nall::Eval::Node* node, Evaluation mode) {
   nall::string name = node->link[0]->literal;
   if(auto parameters = quantifyParameters(node->link[1])) name.append("#", parameters);
 
@@ -144,7 +144,7 @@ auto Bass::evaluateExpression(nall::Eval::Node* node, Evaluation mode) -> int64_
 //bass' evaluate() only returns int64_t types.
 //this function is used to parse nall::string arguments while performing trivial nall::string concatenation
 //eg "foo" ~ "bar" => "foobar"
-auto Bass::evaluateString(nall::Eval::Node* node) -> nall::string {
+nall::string Bass::evaluateString(nall::Eval::Node* node) {
   if(node->type == nall::Eval::Node::Type::Literal) return node->literal;
   if(node->type == nall::Eval::Node::Type::Concatenate) {
     nall::string lhs = evaluateString(node->link[0]).trim("\"", "\"", 1L);
@@ -155,7 +155,7 @@ auto Bass::evaluateString(nall::Eval::Node* node) -> nall::string {
   return {};
 }
 
-auto Bass::evaluateLiteral(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+int64_t Bass::evaluateLiteral(nall::Eval::Node* node, Evaluation mode) {
   nall::string& s = node->literal;
 
   if(s[0] == '0' && s[1] == 'b') return toBinary(s);
@@ -174,7 +174,7 @@ auto Bass::evaluateLiteral(nall::Eval::Node* node, Evaluation mode) -> int64_t {
   return 0;
 }
 
-auto Bass::evaluateSubscript(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+int64_t Bass::evaluateSubscript(nall::Eval::Node* node, Evaluation mode) {
   nall::string& s = node->link[0]->literal;
 
   if(auto array = findArray(s)) {
@@ -189,7 +189,7 @@ auto Bass::evaluateSubscript(nall::Eval::Node* node, Evaluation mode) -> int64_t
   return 0;
 }
 
-auto Bass::evaluateAssign(nall::Eval::Node* node, Evaluation mode) -> int64_t {
+int64_t Bass::evaluateAssign(nall::Eval::Node* node, Evaluation mode) {
   nall::string& s = node->link[0]->literal;
 
   if(auto variable = findVariable(s)) {
