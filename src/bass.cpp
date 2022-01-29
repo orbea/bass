@@ -2,6 +2,8 @@
 //license: ISC
 //project started: 2013-09-27
 
+#include <set>
+
 #include <nall/intrinsics.hpp>
 #include <nall/memory.hpp>
 #include <nall/iterator.hpp>
@@ -26,7 +28,6 @@
 #include <nall/directory.hpp>
 #include <nall/path.hpp>
 #include <nall/hashset.hpp>
-#include <nall/set.hpp>
 #include <nall/terminal.hpp>
 
 #include "bass.hpp"

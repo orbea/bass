@@ -106,7 +106,7 @@ struct Bass {
 
   struct Tracker {
     bool enable = false;
-    nall::set<int64_t> addresses;
+    std::set<int64_t> addresses;
   };
 
   struct Directives {
@@ -203,7 +203,7 @@ protected:
   Instruction* activeInstruction = nullptr;  //used by notice, warning, error
   nall::vector<Instruction> program;    //parsed source code statements
   nall::vector<Block> blocks;           //track the start and end of blocks
-  nall::set<Define> defines;            //defines specified on the terminal
+  std::set<Define> defines;             //defines specified on the terminal
   nall::hashset<Constant> constants;    //constants support forward-declaration
   nall::vector<Frame> frames;           //macros, defines and variables do not
   nall::vector<bool> conditionals;      //track conditional matching

@@ -16,7 +16,7 @@ bool Bass::target(const nall::string& filename, bool create) {
     return false;
   }
 
-  tracker.addresses.reset();
+  tracker.addresses.clear();
   return true;
 }
 
@@ -110,7 +110,8 @@ void Bass::track(unsigned length) {
   if(!tracker.enable) return;
   uint64_t address = targetFile.offset();
   for(auto n : nall::range(length)) {
-    if(tracker.addresses.find(address + n)) {
+    auto search_address = tracker.addresses.find(address + n);
+    if(search_address == tracker.addresses.end()) {
       error("overwrite detected at address 0x", nall::hex(address + n), " [0x", nall::hex(base + address + n), "]");
     }
     tracker.addresses.insert(address + n);

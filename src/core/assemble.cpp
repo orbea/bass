@@ -281,7 +281,7 @@ bool Bass::assemble(const nall::string& statement) {
       return true;
     }
     if(s == "reset") {
-      if(writePhase()) tracker.addresses.reset();
+      if(writePhase()) tracker.addresses.clear();
       return true;
     }
   }
