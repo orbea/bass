@@ -193,7 +193,7 @@ bool Table::parseTable(const nall::string& text) {
     Opcode opcode;
     assembleTableLHS(opcode, part(0));
     assembleTableRHS(opcode, part(1));
-    table.append(opcode);
+    table.push_back(opcode);
   }
 
   return true;
@@ -240,13 +240,13 @@ void Table::assembleTableLHS(Opcode& opcode, const nall::string& text) {
 
   while(text[offset]) {
     unsigned size = length();
-    opcode.prefix.append({slice(text, offset, size), size});
+    opcode.prefix.push_back({slice(text, offset, size), size});
     offset += size;
 
     if(text[offset] != '*') continue;
     unsigned bits = 10 * (text[offset + 1] - '0');
     bits += text[offset + 2] - '0';
-    opcode.number.append({bits});
+    opcode.number.push_back({bits});
     offset += 3;
   }
 
@@ -266,7 +266,7 @@ void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
       Format format = {Format::Type::Static};
       format.data = nall::toHex((const char*)item + 1);
       format.bits = (item.length() - 1) * 4;
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
 // >>XXa
@@ -274,14 +274,14 @@ void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
       Format format = {Format::Type::ShiftRight, Format::Match::Weak};
       format.argument = item[4] - 'a';
       format.data = (item[2] - '0') * 10 + (item[3] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '<' && item[1] == '<') {
       Format format = {Format::Type::ShiftLeft, Format::Match::Weak};
       format.argument = item[4] - 'a';
       format.data = (item[2] - '0') * 10 + (item[3] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     // +X>>YYa
@@ -290,7 +290,7 @@ void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
       format.argument = item[6] - 'a';
       format.displacement = +(item[1] - '0');
       format.data = (item[4] - '0') * 10 + (item[5] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     // N>>XXa
@@ -298,60 +298,60 @@ void Table::assembleTableRHS(Opcode& opcode, const nall::string& text) {
       Format format = {Format::Type::NegativeShiftRight, Format::Match::Weak};
       format.argument = item[5] - 'a';
       format.data = (item[3] - '0') * 10 + (item[4] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     // Na
     else if(item[0] == 'N' && item[1] != '>') {
       Format format = {Format::Type::Negative, Format::Match::Weak};
       format.argument = item[1] - 'a';
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '%') {
       Format format = {Format::Type::Static};
       format.data = nall::toBinary((const char*)item + 1);
       format.bits = (item.length() - 1);
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '!') {
       Format format = {Format::Type::Absolute, Format::Match::Exact};
       format.argument = item[1] - 'a';
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '=') {
       Format format = {Format::Type::Absolute, Format::Match::Strong};
       format.argument = item[1] - 'a';
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '~') {
       Format format = {Format::Type::Absolute, Format::Match::Weak};
       format.argument = item[1] - 'a';
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '+') {
       Format format = {Format::Type::Relative};
       format.argument = item[2] - 'a';
       format.displacement = +(item[1] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '-') {
       Format format = {Format::Type::Relative};
       format.argument = item[2] - 'a';
       format.displacement = -(item[1] - '0');
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
 
     else if(item[0] == '*') {
       Format format = {Format::Type::Repeat};
       format.argument = item[1] - 'a';
       format.data = nall::toHex((const char*)item + 3);
-      opcode.format.append(format);
+      opcode.format.push_back(format);
     }
   }
 }

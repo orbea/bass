@@ -32,9 +32,9 @@ private:
   };
 
   struct Opcode {
-    nall::vector<Prefix> prefix;
-    nall::vector<Number> number;
-    nall::vector<Format> format;
+    std::vector<Prefix> prefix;
+    std::vector<Number> number;
+    std::vector<Format> format;
     nall::string pattern;
   };
 
@@ -46,6 +46,6 @@ private:
   void assembleTableRHS(Opcode& opcode, const nall::string& text);
   uint64_t swapEndian(uint64_t data, unsigned bits);
 
-  nall::vector<Opcode> table;
+  std::vector<Opcode> table;
   uint64_t bitval, bitpos;
 };
